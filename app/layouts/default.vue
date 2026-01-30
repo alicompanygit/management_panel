@@ -1,9 +1,20 @@
+<!-- layouts/default.vue -->
 <template>
-  <v-app>
-    <v-main>
-      <slot />
-    </v-main>
+  <div>
+    <header>
+      <!-- هدر مشترک -->
+    </header>
 
-    <AppFooter />
-  </v-app>
+    <main>
+      <slot />  <!-- محتوای هر صفحه اینجا رندر می‌شود -->
+    </main>
+
+    <footer>
+      <!-- فوتر مشترک -->
+    </footer>
+  </div>
 </template>
+
+<script setup lang="ts">
+// کدهای مشترک لایوت، مثل reactive یا composable ها
+</script>
