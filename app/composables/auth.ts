@@ -18,27 +18,74 @@ type TUserLoginResponse = {
 }
 
 type TUserModel = {
-    id: string
+    id: number
     email: string
     name: string
     is_super_user: boolean
     is_god: boolean
 }
 
+type TGetCurrentUser = {
+    status: string
+    user: TUserModel
+}
+
+type  TFetchUsersListResponse = {
+    status: string
+    page: number
+    per_page: number
+    total: number
+    pages: number
+    users: usersListModel
+}
+
+type usersListModel = {
+    id: number
+    public_id: string
+    email: string
+    name: string
+    is_god: boolean
+    is_super_user: boolean
+    created_at: string
+}
+
 interface IAuth {
+    user: TUserModel|null
+    usersListData: TFetchUsersListResponse|null
+
     apiAddUser(body: TAddUseBody): Promise<boolean>
+    apiUserLogin(body: TUserLoginBody): Promise<void>
+    apiGetCurrentUser(): Promise<void>
+    apiFetchUsersList(pageNumber: number): Promise<void>
+    apiAddSuperUser(userId: number): Promise<boolean>
+    apiRemoveSuperUser(userId: number): Promise<boolean>
 }
 
 export class auth  implements IAuth {
+    user: TUserModel|null = null
+    usersListData: TFetchUsersListResponse|null = null
+
+    private async fetchWithAuth<T>(url: string, options: RequestInit = {}): Promise<T> {
+        const token = localStorage.getItem('token')
+        const headers = {
+            ...options.headers,
+            Authorization: token ? `Bearer ${token}` : ''
+        }
+
+        return await $fetch<T>(url, { ...options, headers })
+    }
 
     async apiAddUser (body: TAddUseBody){
         if(!body) {
             console.error('error in apiAddUser: body not found')
         }
         try {
-            await $fetch(`${config.public.baseUrl}/api/users`, {
+            await this.fetchWithAuth(`${config.public.baseUrl}/user_register`, {
                 method: 'POST',
-                body
+                body: JSON.stringify(body),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
             })
             return true
         } catch (error) {
@@ -50,20 +97,95 @@ export class auth  implements IAuth {
 
     async apiUserLogin (body: TUserLoginBody){
         if(!body) {
-            console.error('error in apiAddUser: body not found')
+            console.error('error in apiUserLogin: body not found')
+            return
         }
         try {
-            const res = await $fetch<TUserLoginResponse>(`${config.public.baseUrl}/api/users`, {
-                method: 'POST',
-                body
-            })
-            return true
+            const res = await this.fetchWithAuth<TUserLoginResponse>(
+                `${config.public.baseUrl}/login`,
+                {
+                    method: 'POST',
+                    body: JSON.stringify(body),
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                }
+            )
+            if(res.status === 'success' && res.user) {
+                this.user = res.user
+                localStorage.setItem('token', res.access_token)
+            }
         } catch (error) {
-            console.error('error in apiAddUser:', error)
+            console.error('error in apiUserLogin:', error)
+        }
+        
+    }
+
+    async apiGetCurrentUser (){
+        try {
+            const res = await this.fetchWithAuth<TGetCurrentUser>(`${config.public.baseUrl}/get_current_user`, {
+                method: 'GET',
+            })
+            if(res.status === 'success' && res.user) {
+                this.user = res.user
+            }
+        } catch (error) {
+            console.error('error in apiGetCurrentUser:', error)
+            return
+        }
+        
+    }
+
+    async apiFetchUsersList (pageNumber: number){
+        try {
+            const res = await this.fetchWithAuth<TFetchUsersListResponse>(`${config.public.baseUrl}/get_users/${pageNumber}`, {
+                method: 'GET',
+            })
+            if(res.status === 'success') {
+                this.usersListData = res
+            }
+        } catch (error) {
+            console.error('error in apiFetchUsersList:', error)
+            return
+        }
+        
+    }
+
+    async apiAddSuperUser (userId: number){
+        try {
+            const res = await this.fetchWithAuth<{status: string, message: string}>(`${config.public.baseUrl}/make_super_user/${userId}`, {
+                method: 'PUT',
+            })
+            if(res.status === 'success') {
+                return true
+            } else {
+                console.error('error in apiAddSuperUser:', res.message)
+                return false
+            } 
+        } catch (error) {
+            console.error('error in apiAddSuperUser:', error)
+            return false
+        }
+        
+    }
+
+    async apiRemoveSuperUser (userId: number){
+        try {
+            const res = await this.fetchWithAuth<{status: string, message: string}>(`${config.public.baseUrl}/remove_super_user/${userId}`, {
+                method: 'PUT',
+            })
+            if(res.status === 'success') {
+                return true
+            } else {
+                console.error('error in apiRemoveSuperUser:', res.message)
+                return false
+            } 
+        } catch (error) {
+            console.error('error in apiRemoveSuperUser:', error)
             return false
         }
         
     }
 }
 
-export const useTest = reactive(new auth());
+export const useAuth = reactive(new auth());
