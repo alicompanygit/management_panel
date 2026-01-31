@@ -3,5 +3,5 @@
 </script>
 
 <template>
-  
+  hello word
 </template>

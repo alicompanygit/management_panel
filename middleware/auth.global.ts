@@ -1,5 +1,5 @@
 import { defineNuxtRouteMiddleware, navigateTo } from 'nuxt/app';
-import { useAuth } from './'
+import { useAuth } from '~/composables/auth'
 
 
 const publicRoutes = ['/auth/login', '/auth/forgot-password', '/set-password'];

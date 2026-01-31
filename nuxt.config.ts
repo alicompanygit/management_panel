@@ -1,4 +1,6 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
+import { resolve } from 'path'
+import { fileURLToPath } from 'url'
 import en from './app/locales/en.json'
 import fa from './app/locales/fa.json'
 
@@ -28,17 +30,17 @@ export default defineNuxtConfig({
   // @ts-ignore
   i18n: {
     locales: [
-      { code: 'en', name: 'English' },
-      { code: 'fa', name: 'فارسی' }
+      { code: 'en', name: 'English', file: 'en.json' },
+      { code: 'fa', name: 'فارسی', file: 'fa.json' }
     ],
     defaultLocale: 'en',
-    vueI18n: {
-      legacy: false,
-      messages: {
-        en,
-        fa
-      }
-    }
+    lazy: true,
+    langDir: 'app/locales'
+  },
+
+  alias: {
+    '~': resolve(fileURLToPath(import.meta.url), './'),
+    '@': resolve(fileURLToPath(import.meta.url), './')
   },
 
   vuetify: {

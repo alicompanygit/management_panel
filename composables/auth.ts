@@ -1,4 +1,6 @@
 import { reactive } from 'vue';
+import { useRuntimeConfig } from '#app'
+
 const config = useRuntimeConfig()
 
 type TAddUseBody = {
