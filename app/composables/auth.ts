@@ -65,15 +65,33 @@ export class auth  implements IAuth {
     user: TUserModel|null = null
     usersListData: TFetchUsersListResponse|null = null
 
-    private async fetchWithAuth<T>(url: string, options: RequestInit = {}): Promise<T> {
+    private async fetchWithAuth<T>(
+        url: string,
+        options: Omit<RequestInit, 'headers'> & { headers?: Record<string, string> } = {}
+    ): Promise<T> {
         const token = localStorage.getItem('token')
-        const headers = {
-            ...options.headers,
-            Authorization: token ? `Bearer ${token}` : ''
+
+        const headers: Record<string, string> = {
+            'Content-Type': 'application/json',
+            Authorization: token ? `Bearer ${token}` : '',
+            ...(options.headers ?? {})
         }
 
-        return await $fetch<T>(url, { ...options, headers })
+        return await $fetch<T>(url, {
+            ...options,
+            headers,
+            method: options.method?.toLowerCase() as
+                | 'get'
+                | 'post'
+                | 'put'
+                | 'patch'
+                | 'delete'
+                | 'head'
+                | 'options'
+                | undefined
+        })
     }
+
 
     async apiAddUser (body: TAddUseBody){
         if(!body) {
