@@ -1,10 +1,12 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
+import en from './app/locales/en.json'
+import fa from './app/locales/fa.json'
+
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
   ssr: false,
 
-  // when enabling ssr option you need to disable inlineStyles and maybe devLogs
   features: {
     inlineStyles: false,
     devLogs: false,
@@ -21,7 +23,23 @@ export default defineNuxtConfig({
   },
 
   css: [],
-  modules: ['@nuxt/fonts', 'vuetify-nuxt-module'],
+  modules: ['@nuxt/fonts', 'vuetify-nuxt-module', '@nuxtjs/i18n'],
+
+  // @ts-ignore
+  i18n: {
+    locales: [
+      { code: 'en', name: 'English' },
+      { code: 'fa', name: 'فارسی' }
+    ],
+    defaultLocale: 'en',
+    vueI18n: {
+      legacy: false,
+      messages: {
+        en,
+        fa
+      }
+    }
+  },
 
   vuetify: {
     moduleOptions: {
@@ -36,8 +54,6 @@ export default defineNuxtConfig({
         },
       },
 
-      // /* If customizing sass global variables ($utilities, $reset, $color-pack, $body-font-family, etc) */
-      // disableVuetifyStyles: true,
       styles: {
         configFile: 'assets/settings.scss',
       },
