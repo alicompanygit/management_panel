@@ -1,8 +1,4 @@
-// https://nuxt.com/docs/api/configuration/nuxt-config
-import { resolve } from 'path'
 import { fileURLToPath } from 'url'
-import en from '~/i18n/locales/en.json'
-import fa from '~/i18n/locales/fa.json'
 
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
@@ -39,9 +35,10 @@ export default defineNuxtConfig({
   },
 
   alias: {
-    '~': resolve(fileURLToPath(import.meta.url), './'),
-    '@': resolve(fileURLToPath(import.meta.url), './')
+    '~': fileURLToPath(new URL('./', import.meta.url)),
+    '@': fileURLToPath(new URL('./', import.meta.url)),
   },
+
 
   devServer: {
     host: '127.0.0.1',

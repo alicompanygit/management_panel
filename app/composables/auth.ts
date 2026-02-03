@@ -1,7 +1,6 @@
 import { reactive } from 'vue';
 import { useRuntimeConfig } from '#app'
 
-const config = useRuntimeConfig()
 
 type TAddUseBody = {
     email: string
@@ -67,6 +66,10 @@ export class auth  implements IAuth {
     user: TUserModel|null = null
     usersListData: TFetchUsersListResponse|null = null
 
+    private get config() {
+        return useRuntimeConfig()
+    }
+
     private async fetchWithAuth<T>(
         url: string,
         options: Omit<RequestInit, 'headers'> & { headers?: Record<string, string> } = {}
@@ -100,7 +103,7 @@ export class auth  implements IAuth {
             console.error('error in apiAddUser: body not found')
         }
         try {
-            await this.fetchWithAuth(`${config.public.baseUrl}/user_register`, {
+            await this.fetchWithAuth(`${this.config.public.baseUrl}/user_register`, {
                 method: 'POST',
                 body: JSON.stringify(body),
                 headers: {
@@ -122,7 +125,7 @@ export class auth  implements IAuth {
         }
         try {
             const res = await this.fetchWithAuth<TUserLoginResponse>(
-                `${config.public.baseUrl}/login`,
+                `${this.config.public.baseUrl}/login`,
                 {
                     method: 'POST',
                     body: JSON.stringify(body),
@@ -143,7 +146,7 @@ export class auth  implements IAuth {
 
     async apiGetCurrentUser (){
         try {
-            const res = await this.fetchWithAuth<TGetCurrentUser>(`${config.public.baseUrl}/get_current_user`, {
+            const res = await this.fetchWithAuth<TGetCurrentUser>(`${this.config.public.baseUrl}/get_current_user`, {
                 method: 'GET',
             })
             if(res.status === 'success' && res.user) {
@@ -158,7 +161,7 @@ export class auth  implements IAuth {
 
     async apiFetchUsersList (pageNumber: number){
         try {
-            const res = await this.fetchWithAuth<TFetchUsersListResponse>(`${config.public.baseUrl}/get_users/${pageNumber}`, {
+            const res = await this.fetchWithAuth<TFetchUsersListResponse>(`${this.config.public.baseUrl}/get_users/${pageNumber}`, {
                 method: 'GET',
             })
             if(res.status === 'success') {
@@ -173,7 +176,7 @@ export class auth  implements IAuth {
 
     async apiAddSuperUser (userId: number){
         try {
-            const res = await this.fetchWithAuth<{status: string, message: string}>(`${config.public.baseUrl}/make_super_user/${userId}`, {
+            const res = await this.fetchWithAuth<{status: string, message: string}>(`${this.config.public.baseUrl}/make_super_user/${userId}`, {
                 method: 'PUT',
             })
             if(res.status === 'success') {
@@ -191,7 +194,7 @@ export class auth  implements IAuth {
 
     async apiRemoveSuperUser (userId: number){
         try {
-            const res = await this.fetchWithAuth<{status: string, message: string}>(`${config.public.baseUrl}/remove_super_user/${userId}`, {
+            const res = await this.fetchWithAuth<{status: string, message: string}>(`${this.config.public.baseUrl}/remove_super_user/${userId}`, {
                 method: 'PUT',
             })
             if(res.status === 'success') {

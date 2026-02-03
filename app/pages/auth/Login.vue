@@ -9,7 +9,7 @@
                 <div class="d-flex justify-center mb-5">
                   logo
                 </div>
-                <auth-login-form/>
+                <login-form/>
               </v-card-item>
             </v-card>
           </div>
@@ -20,6 +20,8 @@
 </template>
 
 <script setup lang="ts">
+import LoginForm from "~/app/components/auth/LoginForm.vue";
+
 definePageMeta({
   layout: "blank",
 });

@@ -1,6 +1,6 @@
-import { fa2en } from '@/utils/helpers/inputFormatter';
-
-import { i18n } from '~/plugins/vue-i18n';
+import { fa2en } from './inputFormatter';
+import { phoneValidate } from './validatePhoneNumber';
+import { i18n } from './../plugins/vue-i18n';
 
 export type TValidationRule =
   | 'requiredRule'
@@ -176,8 +176,6 @@ export const phone = (v: string) => {
     'شماره تماس وارد شده معتبر نیست'
   );
 };
-
-import { phoneValidate } from '@/utils/validatePhoneNumber';
 
 export const requiredPhone = (v: string) => {
   if (!phoneValidate.parsePhoneNumber(v)?.isValid)
