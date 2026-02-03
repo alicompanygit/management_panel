@@ -59,7 +59,7 @@ export default defineNuxtConfig({
       },
 
       styles: {
-        configFile: 'assets/settings.scss',
+        configFile: 'assets/scss/style.scss',
       },
     },
   },

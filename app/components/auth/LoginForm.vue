@@ -1,7 +1,7 @@
 <template>
   <v-form ref="loginForm" @submit.prevent="login" class="my-4">
     <v-label class="text-subtitle-1 font-weight-semibold pb-2 text-grey200">
-      {{ $t('Username') }}
+      {{ $t('email') }}
     </v-label>
     <v-text-field
         v-model="username"
@@ -12,7 +12,7 @@
         is-number
     ></v-text-field>
     <v-label class="text-subtitle-1 font-weight-semibold pb-2 text-grey200">
-      {{ $t('Password') }}
+      {{ $t('password') }}
     </v-label>
     <v-text-field
         v-model="password"
