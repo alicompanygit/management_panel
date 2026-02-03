@@ -1,66 +1,184 @@
-import { fileURLToPath } from 'url'
+import { createResolver } from '@nuxt/kit';
+import vuetify from 'vite-plugin-vuetify';
+
+const { resolve } = createResolver(import.meta.url);
 
 export default defineNuxtConfig({
-  compatibilityDate: '2025-07-15',
-  devtools: { enabled: true },
   ssr: false,
-
-  features: {
-    inlineStyles: false,
-    devLogs: false,
-  },
-
-  build: {
-    transpile: ['vuetify'],
-  },
-
-  vite: {
-    ssr: {
-      noExternal: ['vuetify'],
+  runtimeConfig: {
+    nitro: {
+      envPrefix: 'VITE_',
     },
-  },
-
-  css: [],
-  modules: ['@nuxt/fonts', 'vuetify-nuxt-module', '@nuxtjs/i18n'],
-
-  // @ts-ignore
-  i18n: {
-    lazy: true,
-    langDir: 'locales',
-    locales: [
-      { code: 'en', file: 'en.json' },
-      { code: 'fa', file: 'fa.json' }
-    ],
-    defaultLocale: 'en'
   },
 
   alias: {
-    '~': fileURLToPath(new URL('./', import.meta.url)),
-    '@': fileURLToPath(new URL('./', import.meta.url)),
+    // '~': `${process.env.NGINX_PATH}`,
+    // '@': `${process.env.NGINX_PATH}`,
+    // '~~': `${process.env.NGINX_PATH}`,
+    // '@@': `${process.env.NGINX_PATH}`,
+    'public/': `${process.env.NGINX_PATH}public/`,
+    'files/': `${process.env.NGINX_PATH}files/`,
+    'fonts/': `${process.env.NGINX_PATH}fonts/`,
+    'icons/': `${process.env.NGINX_PATH}icons/`,
+    'images/': `${process.env.NGINX_PATH}images/`,
   },
 
-
-  devServer: {
-    host: '127.0.0.1',
-    port: 3001
+  typescript: {
+    shim: false,
   },
 
-  vuetify: {
-    moduleOptions: {
-      // check https://nuxt.vuetifyjs.com/guide/server-side-rendering.html
-      ssrClientHints: {
-        reloadOnFirstRequest: false,
-        viewportSize: false,
-        prefersColorScheme: false,
+  plugins: ['~/plugins/firebase.js', '~/plugins/fetching.ts'],
 
-        prefersColorSchemeOptions: {
-          useBrowserThemeOnly: false,
-        },
+  vite: {
+    ssr: {
+      noExternal: ['vuetify'], // add the vuetify vite plugin
+    },
+    optimizeDeps: {
+      include: [
+        '@tato30/vue-pdf',
+        'vue3-persian-datetime-picker',
+        'vue-scrollto',
+        'vue3-smooth-dnd',
+        'yup',
+        'jssip',
+      ],
+      // load all packages on first build
+      exclude: [
+        '@fullcalendar/core',
+        '@fullcalendar/daygrid',
+        '@fullcalendar/interaction',
+        '@fullcalendar/timegrid',
+        '@fullcalendar/vue3',
+        '@iconify/vue',
+        '@mdi/font',
+        '@nuxt/vite-builder',
+        '@pinia/nuxt',
+        '@tato30/vue-pdf',
+        '@tiptap/pm',
+        '@tiptap/starter-kit',
+        '@tiptap/vue-3',
+        '@types/aos',
+        'aos',
+        'chance',
+        'date-fns',
+        'firebase',
+        'maska',
+        'apexcharts',
+        'vue3-apexcharts',
+        'pinia',
+        'qrcode.vue',
+        'remixicon',
+        'sass',
+        'tiff.js',
+        'svgmap',
+        'ulid',
+        'vee-validate',
+        'vite-plugin-vuetify',
+        'vue',
+        'vue-draggable-next',
+        'vue-i18n',
+        'vue-style-loader',
+        'vue-tabler-icons',
+
+        'vue3-carousel',
+        'vue3-easy-data-table',
+        'vue3-perfect-scrollbar',
+        'vuedraggable',
+        'vuetify',
+        'wavesurfer.js',
+        'xlsx',
+      ],
+      esbuildOptions: {
+        target: 'esnext',
       },
-
-      styles: {
-        configFile: 'assets/scss/style.scss',
+    },
+    esbuild: {
+      target: 'esnext',
+    },
+    build: {
+      target: 'esnext',
+    },
+    resolve: {
+      mainFields: ['browser', 'module', 'main', 'jsnext:main', 'jsnext'],
+    },
+    css: {
+      preprocessorOptions: {
+        scss: {
+          additionalData: `
+            $primary-path: '${process.env.NGINX_PATH}';
+          `,
+        },
       },
     },
   },
-})
+
+  //build: { transpile: ["vuetify"] },
+  modules: [
+    '@pinia/nuxt',
+    '@pinia-plugin-persistedstate/nuxt',
+    async (options, nuxt) => {
+      nuxt.hooks.hook('vite:extendConfig', (config: any) =>
+        // @ts-ignore
+        config.plugins.push(
+          vuetify({
+            styles: { configFile: resolve('/assets/scss/variables.scss') },
+          })
+        )
+      );
+    },
+  ],
+  devtools: {
+    enabled: true,
+  },
+
+  app: {
+    baseURL: process.env.NGINX_PATH,
+    head: {
+      charset: 'utf-8',
+      viewport: 'width=device-width, initial-scale=1',
+      meta: [],
+      title: process.env.VITE_COMPANY_NAME,
+      link: [
+        {
+          rel: 'icon',
+          type: 'image/x-icon',
+          href: `${process.env.NGINX_PATH}images/logos/${process.env.VITE_COMPANY_LOGO}/logo.png`,
+        },
+      ],
+      style: [
+        {
+          children: `
+            :root {
+              --primary-path: ${process.env.NGINX_PATH};
+            }
+          `,
+        },
+      ],
+    },
+  },
+
+  nitro: {
+    serveStatic: true,
+  },
+
+  sourcemap: {
+    server: true,
+    client: true,
+  },
+  devServerHandlers: [],
+  devServer: {
+    host: '127.0.0.1',
+    port: 3001,
+  },
+  // hooks: {
+  //   "vite:extendConfig": (config: any) => {
+  //     config.plugins.push(
+  //       vuetify({
+  //         styles: { configFile: resolve("/assets/scss/variables.scss") },
+  //       })
+  //     );
+  //   },
+  // },
+
+  compatibilityDate: '2024-07-30',
+});

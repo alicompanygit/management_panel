@@ -1,17 +1,18 @@
 {
+  "extends": "./.nuxt/tsconfig.json",
   "compilerOptions": {
-    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "incremental": true,
+    "maxNodeModuleJsDepth": 10,
+    "noErrorTruncation": true,
+    "target": "ES2020",
+    "module": "ESNext",
+    "strict": true,
+    "jsx": "preserve",
+    "moduleResolution": "node",
     "esModuleInterop": true,
-    "baseUrl": ".",
-    "paths": {
-      "~/*": ["./*"],
-      "@/*": ["./*"]
-    }
+    "forceConsistentCasingInFileNames": true
   },
-  "references": [
-    { "path": "./.nuxt/tsconfig.app.json" },
-    { "path": "./.nuxt/tsconfig.server.json" },
-    { "path": "./.nuxt/tsconfig.shared.json" },
-    { "path": "./.nuxt/tsconfig.node.json" }
-  ]
+  "include": ["**/*.ts", "**/*.js", "**/*.vue"],
+  "exclude": ["node_modules", "dist", ".output"]
 }

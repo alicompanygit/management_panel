@@ -1,8 +1,0 @@
-@use './_variables' as settings;
-
-@mixin apply-typography($tag) {
-  // @debug map-get(settings.$typography, $tag); // <--- debug
-  @each $prop, $val in map-get(settings.$typography, $tag) {
-    #{if($prop == 'size', 'font-size', if($prop == 'weight', 'font-weight', $prop))}: #{$val};
-  }
-}
