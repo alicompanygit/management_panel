@@ -1,6 +1,5 @@
 <template>
     <div class="mobile-child-content py-2 px-3 fade_animation_1"
-         :class="{'dark-style': darkTheme , 'light-style': !darkTheme}" 
          v-if="customizer.selectedItem.length != 0"
         :style="{
             top: customizer.childernLocation.y+'px',
@@ -33,22 +32,10 @@ const navigate = (path) => {
     navigateTo(path);
 }
 
-const darkTheme = computed(() => {
-    const theme = customizer.actTheme
-    if(theme.split('_')[0] == 'DARK') {
-        return true
-    } else {
-        return false
-    }
-})
 </script>
 
 <style scoped lang="scss">
 .light-style {
-    background: #00406B;
-    color: #fff;
-}
-.dark-style {
     background: #00406B;
     color: #fff;
 }

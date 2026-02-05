@@ -49,7 +49,7 @@ export default defineNuxtPlugin((nuxtApp) => {
       },
     },
     theme: {
-      defaultTheme: 'SHARED_COLORS',
+      defaultTheme: 'shared',
       themes: {
         shared: {
           dark: false,

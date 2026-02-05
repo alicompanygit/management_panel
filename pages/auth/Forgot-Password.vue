@@ -9,7 +9,7 @@
                 <div class="d-flex justify-center my-5">
                     <LcFullLogoLogin />
                 </div>
-                <h2 class="text--darken-2 text-h4 font-weight-semibold">
+                <h2 class=" text-h4 font-weight-semibold">
                   {{ $t("Forgot Password") }}
                 </h2>
                 <p class="text-subtitle-1 text-grey100 py-4 text-10">

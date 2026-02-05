@@ -1,6 +1,6 @@
 <script setup>
-import { useRoute } from 'vue-router';
 import { useCustomizerStore } from '@/stores/customizer';
+import { useRoute } from 'vue-router';
 
 const customizer = useCustomizerStore();
 const route = useRoute();
@@ -25,14 +25,6 @@ const navigate = async (path) => {
   customizer.activeChilds = false;
 };
 
-const darkTheme = computed(() => {
-  const theme = customizer.actTheme;
-  if (theme.split('_')[0] == 'DARK') {
-    return true;
-  } else {
-    return false;
-  }
-});
 
 const clickHandler = () => {
   customizer.activeChilds = false;
@@ -45,7 +37,6 @@ const clickHandler = () => {
     @click="clickHandler"
     @mouseenter="handleHover"
     @mouseleave="mouseleaveHandler"
-    :class="{ 'dark-style': darkTheme, 'light-style': !darkTheme }"
     :style="{
       top: customizer.alignFromBottom
         ? 'auto'
@@ -72,10 +63,6 @@ const clickHandler = () => {
   background: #00406b;
   color: #fff;
 }
-.dark-style {
-  background-color: #00406b;
-  color: #fff;
-}
 
 .custom-style {
   width: 200px;
@@ -85,7 +72,6 @@ const clickHandler = () => {
   top: 30px;
   right: 20px;
   /* background-color: #fff; */
-  /* dark */
   /* background-color: #212e41; */
   display: flex;
   flex-direction: column;

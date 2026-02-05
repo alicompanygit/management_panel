@@ -1,6 +1,6 @@
 <template>
   <div class="authentication">
-    <v-container fluid class="pa-3">
+    <!-- <v-container fluid class="pa-3">
       <v-row class="h-100vh d-flex justify-center align-center">
         <v-col cols="12" class="d-flex align-center">
           <div class="boxed-auth-wrap">
@@ -15,12 +15,10 @@
           </div>
         </v-col>
       </v-row>
-    </v-container>
+    </v-container> -->
+    bbbbnnnn
   </div>
 </template>
 
 <script setup lang="ts">
-definePageMeta({
-  layout: "blank",
-});
 </script>

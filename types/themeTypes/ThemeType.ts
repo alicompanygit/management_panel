@@ -1,6 +1,5 @@
 export type ThemeTypes = {
     name: string;
-    dark: boolean;
     variables?: object;
     colors: {
         primary?: string;

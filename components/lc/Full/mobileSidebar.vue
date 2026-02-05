@@ -1,6 +1,6 @@
 <template>
     <div class="content fade_animations" @click="close">
-      <div class="sidebar-content slid-left-animation-5" :class="{'dark-style': darkTheme , 'light-style': !darkTheme}">
+      <div class="sidebar-content slid-left-animation-5">
       
         <div class="w-100 d-flex align-center px-2 py-3">
          <div class="w-50 d-flex align-center">
@@ -69,14 +69,6 @@ const sidebarItemLength = computed(() => {
   })
 })
 
-const darkTheme = computed(() => {
-    const theme = customizer.actTheme
-    if(theme.split('_')[0] == 'DARK') {
-        return true
-    } else {
-        return false
-    }
-})
 
 const close = () => {
     customizer.mobileSidebar = false
@@ -132,10 +124,6 @@ const handleClick = (data) => {
     color: #fff;
 }
 
-.dark-style {
-    background: #00406B;
-    color: #fff;
-}
 
 .menu-items{
     width: 100%;
