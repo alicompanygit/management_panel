@@ -38,6 +38,7 @@ export default defineNuxtPlugin((nuxtApp) => {
   };
 
   const vuetify = createVuetify({
+    locale: { locale: 'fa' },
     components: {
       draggable: VueDraggableNext,
     },

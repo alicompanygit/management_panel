@@ -1,5 +1,5 @@
 <template>
-  <v-form
+  <!-- <v-form
     ref="resetForm"
     lazy-validation
     class="mt-sm-4"
@@ -25,25 +25,25 @@
     >
       {{ $t("Send") }}
     </v-btn>
-  </v-form>
+  </v-form> -->
 </template>
 
 <script setup>
-import { useAuthStore } from "@/stores/auth/index";
-import { requiredRule } from "@/utils/validation";
+// import { useAuthStore } from "@/stores/auth/index";
+// import { requiredRule } from "@/utils/validation";
 
-const authStore = useAuthStore();
+// const authStore = useAuthStore();
 
-const resetForm = ref(null);
-const isLoading = ref(false);
-const number = ref("");
+// const resetForm = ref(null);
+// const isLoading = ref(false);
+// const number = ref("");
 
-const resetPassword = async () => {
-  const { valid } = await resetForm.value.validate();
-  if (!valid) return;
-  isLoading.value = true;
-  await authStore
-    .forgotPassword(number.value)
-    .then(() => (isLoading.value = false));
-};
+// const resetPassword = async () => {
+//   const { valid } = await resetForm.value.validate();
+//   if (!valid) return;
+//   isLoading.value = true;
+//   await authStore
+//     .forgotPassword(number.value)
+//     .then(() => (isLoading.value = false));
+// };
 </script>

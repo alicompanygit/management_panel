@@ -1,5 +1,5 @@
+import { useRuntimeConfig } from '#app';
 import { reactive } from 'vue';
-import { useRuntimeConfig } from '#app'
 
 
 type TAddUseBody = {
@@ -55,7 +55,7 @@ interface IAuth {
     usersListData: TFetchUsersListResponse|null
 
     apiAddUser(body: TAddUseBody): Promise<boolean>
-    apiUserLogin(body: TUserLoginBody): Promise<void>
+    apiUserLogin(body: TUserLoginBody): Promise<TUserModel|null>
     apiGetCurrentUser(): Promise<void>
     apiFetchUsersList(pageNumber: number): Promise<void>
     apiAddSuperUser(userId: number): Promise<boolean>
@@ -67,19 +67,27 @@ export class auth  implements IAuth {
     usersListData: TFetchUsersListResponse|null = null
 
     private get config() {
-        return useRuntimeConfig()
-    }
+        const cfg = useRuntimeConfig()
+        console.log('BASE URL (runtime):', cfg.public.baseUrl)
+        return cfg
+      }
+      
+      
 
     private async fetchWithAuth<T>(
         url: string,
-        options: Omit<RequestInit, 'headers'> & { headers?: Record<string, string> } = {}
+        options: Omit<RequestInit, 'headers'> & { headers?: Record<string, string> } = {},
+        notAuthorization?: boolean
     ): Promise<T> {
         const token = localStorage.getItem('token')
 
         const headers: Record<string, string> = {
             'Content-Type': 'application/json',
-            Authorization: token ? `Bearer ${token}` : '',
             ...(options.headers ?? {})
+        }
+
+        if(!notAuthorization) {
+            headers.Authorization = token ? `Bearer ${token}` : '';
         }
 
         return await $fetch<T>(url, {
@@ -121,7 +129,7 @@ export class auth  implements IAuth {
     async apiUserLogin (body: TUserLoginBody){
         if(!body) {
             console.error('error in apiUserLogin: body not found')
-            return
+            return null
         }
         try {
             const res = await this.fetchWithAuth<TUserLoginResponse>(
@@ -132,14 +140,17 @@ export class auth  implements IAuth {
                     headers: {
                         'Content-Type': 'application/json'
                     }
-                }
+                },
+                true
             )
             if(res.status === 'success' && res.user) {
                 this.user = res.user
                 localStorage.setItem('token', res.access_token)
-            }
+                return this.user
+            } else return null
         } catch (error) {
             console.error('error in apiUserLogin:', error)
+            return null
         }
         
     }

@@ -27,6 +27,7 @@
 
 .header-icon {
   border-radius: 6px;
+
   &:hover {
     background-color: rgb(var(--v-theme-grey3));
 
@@ -50,11 +51,9 @@
 
 .action-play {
   background: rgb(0, 102, 255);
-  background: linear-gradient(
-    165deg,
-    rgba(0, 102, 255, 1) 43%,
-    rgba(186, 213, 252, 1) 100%
-  );
+  background: linear-gradient(165deg,
+      rgba(0, 102, 255, 1) 43%,
+      rgba(186, 213, 252, 1) 100%);
   color: #fff;
   font-size: 22px;
   display: flex;
@@ -72,11 +71,9 @@
 
 .action-edit {
   background: rgb(109, 186, 39);
-  background: linear-gradient(
-    165deg,
-    rgba(109, 186, 39, 1) 45%,
-    rgba(255, 255, 255, 1) 100%
-  );
+  background: linear-gradient(165deg,
+      rgba(109, 186, 39, 1) 45%,
+      rgba(255, 255, 255, 1) 100%);
   color: #fff;
   font-size: 20px;
   display: flex;
@@ -94,11 +91,9 @@
 
 .action-delete {
   background: rgb(244, 32, 32);
-  background: linear-gradient(
-    165deg,
-    rgba(244, 32, 32, 1) 45%,
-    rgba(255, 255, 255, 1) 100%
-  );
+  background: linear-gradient(165deg,
+      rgba(244, 32, 32, 1) 45%,
+      rgba(255, 255, 255, 1) 100%);
   color: #fff;
   font-size: 22px;
   font-weight: 100;
@@ -239,7 +234,9 @@ input[type='file'] {
     overflow: auto;
     scrollbar-width: none;
     position: relative;
-    @media (max-height: 1000px), (max-height: 1000px) {
+
+    @media (max-height: 1000px),
+    (max-height: 1000px) {
       max-height: calc(100dvh - (1000px - 700px) * 0.44);
     }
   }
@@ -308,9 +305,11 @@ a {
 .v-checkbox .v-label {
   font-size: 0.8125rem !important;
 }
+
 .v-radio .v-label {
   color: rgb(var(--v-theme-grey6)) !important;
 }
+
 .v-checkbox .v-label {
   color: rgb(var(--v-theme-grey5)) !important;
 }
@@ -319,10 +318,11 @@ a {
   white-space: pre-wrap;
 }
 
-.v-selection-control__input  {
+.v-selection-control__input {
   svg {
     display: none;
   }
+
   input {
     opacity: 1 !important;
     width: auto !important;

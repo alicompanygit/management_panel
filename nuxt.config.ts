@@ -6,10 +6,10 @@ const { resolve } = createResolver(import.meta.url);
 export default defineNuxtConfig({
   ssr: false,
   runtimeConfig: {
-    nitro: {
-      envPrefix: 'VITE_',
-    },
-  },
+    public: {
+      baseUrl: process.env.NUXT_PUBLIC_BASE_URL
+    }
+  },  
 
   alias: {
     // '~': `${process.env.NGINX_PATH}`,
@@ -132,7 +132,7 @@ export default defineNuxtConfig({
   },
 
   app: {
-    baseURL: process.env.NGINX_PATH,
+    // baseURL: process.env.NGINX_PATH,
     head: {
       charset: 'utf-8',
       viewport: 'width=device-width, initial-scale=1',
@@ -168,7 +168,7 @@ export default defineNuxtConfig({
   devServerHandlers: [],
   devServer: {
     host: '127.0.0.1',
-    port: 3001,
+    port: 3000,
   },
   // hooks: {
   //   "vite:extendConfig": (config: any) => {

@@ -1,21 +1,19 @@
 <template>
-  <v-form ref="loginForm" @submit.prevent="login" class="my-4">
+  <v-form ref="loginForm" class="loginForm my-4" @submit.prevent="login">
     <v-label class="text-subtitle-1 font-weight-semibold pb-2 text-grey200">
-      {{ $t('Username') }}
+      {{ $t('Email') }}
     </v-label>
     <base-form-text-field
-      v-model="username"
-      :rules="[requiredRule]"
+      v-model="form.email"
+      :rules="[isValidEmail, requiredRule]"
       class="mb-8"
-      validate-on="blur"
       hide-details="auto"
-      is-number
     ></base-form-text-field>
     <v-label class="text-subtitle-1 font-weight-semibold pb-2 text-grey200">
       {{ $t('Password') }}
     </v-label>
     <base-form-text-field
-      v-model="password"
+      v-model="form.password"
       :rules="[requiredRule]"
       :type="showPassword ? 'text' : 'password'"
       :append-inner-icon="
@@ -25,22 +23,13 @@
       class="pwdInput"
       validate-on="blur"
     ></base-form-text-field>
-    <div class="d-flex flex-wrap align-center my-3 mr-n2">
-      <v-checkbox v-model="remember" hide-details color="primary" class="me-14">
-        <template v-slot:label class="">
-          <v-label class="text-subtitle-1 font-weight-semibold text-grey200">
-            {{ $t('Remember Me') }}
-          </v-label>
-        </template>
-      </v-checkbox>
-      <div class="ml-sm-auto">
-        <NuxtLink
+    <div class="my-4">
+      <NuxtLink
           to="/auth/forgot-password"
-          class="text-primary text-decoration-none text-body-1 opacity-1 font-weight-medium ms-14"
+          class="text-primary text-body-1 opacity-1 font-weight-medium "
         >
-          {{ $t('Forget Password') }}
-        </NuxtLink>
-      </div>
+          {{ $t('Rejister') }}
+        </NuxtLink>    
     </div>
     <v-btn
       size="large"
@@ -54,21 +43,39 @@
       {{ $t('Login') }}
     </v-btn>
   </v-form>
+  <v-snackbar
+    v-model="showAlert"
+    timeout="2000"
+    color="error"
+    location="top left"
+  >
+    <v-icon icon="material-symbols:error-outline-rounded"/>
+    {{ t('WrongEmailOrPassword') }}
+  </v-snackbar>
 </template>
 
 <script setup>
-import { requiredRule } from '@/utils/validation';
+import { isValidEmail, requiredRule } from '@/utils/validation';
+import { navigateTo } from 'nuxt/app';
+import { ref } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { useAuth } from '~/composables/auth';
 
-const remember = ref(false);
+const { t } = useI18n();
+
 const showPassword = ref(false);
-const password = ref('');
-const username = ref('');
 const isLoading = ref(false);
+const showAlert = ref(false);
 const loginForm = ref(null);
+const form = ref({
+  email: '',
+  password: ''
+})
 
 const login = async () => {
   const { valid } = await loginForm.value.validate();
   if (!valid) return;
+
   const config = useRuntimeConfig();
   const appType = config.public.APP_TYPE;
 
@@ -80,11 +87,16 @@ const login = async () => {
   });
 
   isLoading.value = true;
-  rauth.login({
-    username: username.value,
-    password: password.value,
-    remember: remember.value,
-  });
+  const user = useAuth.apiUserLogin(form.value)
   isLoading.value = false;
+
+  if(user && user.id) {
+    navigateTo('/');
+  } else showAlert.value = true
 };
 </script>
+<style scoped>
+.loginForm{
+  min-width: 300px;
+}
+</style>

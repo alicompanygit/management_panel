@@ -43,7 +43,8 @@ export type TValidationRule =
   | 'checkSpace'
   | 'isCharAllowed'
   | 'noNumberInclude'
-  | 'bannedWords';
+  | 'bannedWords'
+  | 'isValidEmail';
 export const requiredRule = (v: unknown) => {
   const isEmpty = v == null || (Array.isArray(v) ? v.length === 0 : !v);
   return !isEmpty || 'پر کردن این فیلد اجباری است.';
@@ -397,6 +398,14 @@ export const bannedWords =
     return used ? `امکان استفاده از "${used}" وجود ندارد` : true;
   };
 
+export function isValidEmail(email: string): any {
+  if(!email) return true
+
+  const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+  return regex.test(email) ?true: 'یک ایمیل معتبر وارد کنید'
+}
+
+
 export const RuleMap: Record<TValidationRule, (v: any) => boolean | string> = {
   requiredRule,
   requiredRuleCrmLinkUser,
@@ -439,4 +448,5 @@ export const RuleMap: Record<TValidationRule, (v: any) => boolean | string> = {
   isCharAllowed,
   noNumberInclude,
   bannedWords,
+  isValidEmail
 };
