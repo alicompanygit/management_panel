@@ -54,7 +54,7 @@ interface IAuth {
     user: TUserModel|null
     usersListData: TFetchUsersListResponse|null
 
-    apiAddUser(body: TAddUseBody): Promise<boolean>
+    apiAddUser(body: TAddUseBody): Promise<boolean|Record<string,string>>
     apiUserLogin(body: TUserLoginBody): Promise<TUserModel|null>
     apiGetCurrentUser(): Promise<void>
     apiFetchUsersList(pageNumber: number): Promise<void>
@@ -111,14 +111,16 @@ export class auth  implements IAuth {
             console.error('error in apiAddUser: body not found')
         }
         try {
-            await this.fetchWithAuth(`${this.config.public.baseUrl}/user_register`, {
+            const res = await this.fetchWithAuth<Record<string,string>>(`${this.config.public.baseUrl}/user_register`, {
                 method: 'POST',
                 body: JSON.stringify(body),
                 headers: {
                     'Content-Type': 'application/json'
                 }
             })
-            return true
+
+            if (res.message || res.error) return res
+            else return false
         } catch (error) {
             console.error('error in apiAddUser:', error)
             return false
