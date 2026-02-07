@@ -18,6 +18,20 @@
 
 @import 'vue3-perfect-scrollbar/dist/vue3-perfect-scrollbar.css';
 
+html,
+.v-main,
+body {
+  background-color: #030306 !important;
+}
+
+.text-secondary2 {
+  color: #FFD933;
+}
+
+.text-tertiary2 {
+  color: #F95959;
+}
+
 .top-header {
   display: flex;
   align-items: center;

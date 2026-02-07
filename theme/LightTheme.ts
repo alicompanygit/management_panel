@@ -1,5 +1,8 @@
 const SHARED_COLORS = {
-  primary7: '#0062A3',
+  primary: '#090910',
+  secondary: '#FFD933',
+  tertiary: '#F95959'
 };
 
 export { SHARED_COLORS };
+

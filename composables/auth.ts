@@ -87,7 +87,7 @@ export class auth  implements IAuth {
         }
 
         if(!notAuthorization) {
-            headers.Authorization = token ? `Bearer ${token}` : '';
+            headers['x-access-tokens'] = token ? `${token}` : '';
         }
 
         return await $fetch<T>(url, {
