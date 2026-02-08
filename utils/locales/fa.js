@@ -19,4 +19,6 @@ export default {
   ItemsPerPage: 'تعداد در صفحه',
   UserManagement: 'مدیریت کاربران',
   FullName: 'نام و نام خانوادگی',
+  ChangeToUser: 'تبدیل به user',
+  ChangeToSuperUser: 'تبدیل به super user',
 };

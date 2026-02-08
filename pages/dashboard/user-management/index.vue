@@ -12,6 +12,13 @@
       <template v-slot:role="{ item }">
         <base-chip :text="handleGetRole(item)" />
       </template>
+      <template v-slot:action="{ item }">
+        <base-button
+          v-if="!item.is_god"
+          :text="item.is_super_user ? 'ChangeToUser' : 'ChangeToSuperUser'"
+        />
+        <span v-else v-text="'-'" />
+      </template>
     </base-table-server>
   </div>
 </template>

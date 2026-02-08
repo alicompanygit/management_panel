@@ -67,7 +67,6 @@
 </template>
 
 <script setup>
-import { hexToRgb } from '@/utils/UpdateColors';
 import { useTheme } from 'vuetify';
 
 const props = defineProps({
@@ -156,8 +155,7 @@ const props = defineProps({
 const theme = useTheme();
 const shadowStyle = computed(() => {
   if (props.variant !== 'elevated') return {};
-  const hex = theme.current.value.colors[props.color] || '#000000';
-  const rgb = hexToRgb(hex);
+  const rgb = props.color || '#000000';
 
   if (!rgb) return {};
 
