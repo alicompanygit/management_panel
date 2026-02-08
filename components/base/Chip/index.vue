@@ -15,12 +15,7 @@
       <v-img v-if="img" :src="img"></v-img>
       <span v-else :style="charStyle">{{ char }}</span>
     </v-avatar>
-    <text-ellipsis
-      :text="text"
-      :clamp="1"
-      :class="textClass"
-      :max-width="maxWidth"
-    />
+    <span v-text="text" :class="textClass" />
     <v-icon v-if="appendIcon" :icon="appendIcon" class="ms-1"></v-icon>
     <v-icon
       v-if="clearable"
@@ -32,8 +27,6 @@
 </template>
 
 <script setup>
-import TextEllipsis from '@/components/base/tools/TextEllipsis.vue';
-import { hexToRgb } from '@/utils/UpdateColors';
 import { useTheme } from 'vuetify';
 
 const props = defineProps({
@@ -74,10 +67,8 @@ const emit = defineEmits(['click:clear']);
 const theme = useTheme();
 const borderStyle = computed(() => {
   if (props.variant !== 'tonal') return {};
-  const hex = theme.current.value.colors[props.color] || '#000000';
-  const rgb = hexToRgb(hex);
   return {
-    border: `1px solid rgba(${rgb}, .3)`,
+    border: `1px solid rgba(${props.color}, .3)`,
   };
 });
 

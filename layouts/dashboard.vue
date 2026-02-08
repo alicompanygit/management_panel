@@ -1,13 +1,58 @@
+<template>
+  <v-app>
+    <v-main>
+      <v-container fluid>
+        <v-app-bar elevation="0" :height="65" id="top" class="sticky app-bar"
+          >ff</v-app-bar
+        >
+        <v-navigation-drawer
+          left
+          class="leftSidebar"
+          :rail="false"
+          rail-width="70"
+          width="230"
+          style="background: #1c1c21 !important"
+        >
+          <div
+            class="bg-containerBg bg-primary menu-content"
+            style="
+              height: calc(100vh - 160px);
+              overflow-y: scroll;
+              background: #1c1c21 !important;
+            "
+          >
+            <v-list
+              class="px-4 py-6 bg-containerBg"
+              style="background: #1c1c21 !important"
+            >
+              <div v-for="(item, i) in sidebarItem">
+                <NuxtLink :to="item.to" @click="handleLogout(item.title)">
+                  <div style="color: #fff" class="d-flex ga-3 mt-6">
+                    <v-icon :icon="item.icon" />
+                    <apan v-text="t(item.title)" />
+                  </div>
+                </NuxtLink>
+              </div>
+            </v-list>
+          </div>
+        </v-navigation-drawer>
+        <router-view />
+      </v-container>
+    </v-main>
+  </v-app>
+</template>
+
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n';
 import { useRtl, useTheme } from 'vuetify';
+import { useAuth } from '~/composables/auth';
+import { navigateTo } from 'nuxt/app';
 
-const theme = useTheme()
-theme.global.name.value = 'light'
+const theme = useTheme();
+theme.global.name.value = 'light';
 
 const { t } = useI18n();
-const rtl = useRtl()
-
+const rtl = useRtl();
 
 const sidebarItem = [
   {
@@ -40,51 +85,16 @@ const sidebarItem = [
     BgColor: 'primary',
     to: '',
   },
-]
+];
+
+const handleLogout = (title: string) => {
+  if (title === 'logout') {
+    localStorage.removeItem('token');
+    useAuth.user = null;
+    return navigateTo('/auth/login');
+  }
+};
 </script>
-
-<template>
-  <v-app>
-    <v-main>
-      <v-container fluid>
-        <v-app-bar
-          elevation="0"
-          :height="65"
-          id="top"
-          class="sticky app-bar"
-        >ff</v-app-bar>
-        <v-navigation-drawer
-          left
-          class="leftSidebar"
-          :rail="false"
-          rail-width="70"
-          width="230"     
-          style="background: #1c1c21 !important;"   
-        >
-        <div
-         class="bg-containerBg bg-primary menu-content" 
-         style="height: calc(100vh - 160px); overflow-y: scroll; background: #1c1c21 !important;"
-         >
-            <v-list class="px-4 py-6 bg-containerBg" style="background: #1c1c21 !important;">
-              <div v-for="(item, i) in sidebarItem">
-                <NuxtLink
-                  :to="item.to"
-                >
-                  <div style="color: #fff;" class="d-flex ga-3 mt-6">
-                    <v-icon :icon="item.icon"/>
-                    <apan v-text="t(item.title)"/>
-                  </div>
-                </NuxtLink>   
-              </div>
-            </v-list>
-
-        </div>
-        </v-navigation-drawer>
-        <router-view /> 
-      </v-container>
-    </v-main>
-  </v-app>
-</template>
 
 <style>
 .app-bar {

@@ -1,46 +1,80 @@
 <template>
-  <div class="dashboard-container d-flex justify-center align-center">
-    <div class="container w-50 rounded-lg px-4 py-6">
-      <div class="text-secondary2 text-custom w-100 d-flex justify-center">خوش آمدید به پنل مدیریت</div>
-      <div class="d-flex justify-center ga-1 w-100 mt-3">
-        <span class="text-white" v-text="useAuth.user?.name"></span>
-        <span class="text-white">به پنل مدیریت یکپارچه RIMS خوش آمدید</span>
-      </div>
-    </div>
+  <div
+    class="dashboard-container d-flex justify-center align-center text-white"
+  >
+    <base-table-server
+      :headers="tableHeaders"
+      :items="tableData?.users ?? []"
+      :loading="loading"
+      :totalItems="tableData?.total || 0"
+      @pageControler="onPageControler"
+    >
+      <template v-slot:role="{ item }">
+        <base-chip :text="handleGetRole(item)" />
+      </template>
+    </base-table-server>
   </div>
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
-import { useAuth } from './../../../composables/auth';
+import { onMounted, ref, computed } from 'vue';
+import { useAuth, type usersListModel } from '~/composables/auth';
+import { useI18n } from 'vue-i18n';
 
 definePageMeta({
-  layout: "dashboard",
+  layout: 'dashboard',
 });
 
-const pageNumber = ref(1)
+const { t } = useI18n();
 
-const fetchUserList = async ()=> {
-  await useAuth.apiFetchUsersList(pageNumber.value)
-}
+const loading = ref(false);
+const pageNumber = ref(1);
+const tableHeaders = ref([
+  { title: t('Index'), key: 'index', align: 'start' },
+  { title: t('UserName'), key: 'name', align: 'start' },
+  { title: t('Email'), key: 'email' },
+  { title: t('Role'), key: 'role' },
+  { title: t('Action'), key: 'action' },
+]);
 
-onMounted( async ()=> {
-  useAuth.usersListData = null
-  await fetchUserList()
-})
+const tableData = computed(() => useAuth.usersListData);
+
+const onPageControler = (info?: any) => {
+  if (info) {
+    pageNumber.value = info.page;
+  }
+  fetchUserList();
+};
+
+const fetchUserList = async () => {
+  loading.value = true;
+  await useAuth.apiFetchUsersList(pageNumber.value);
+  loading.value = false;
+};
+
+const handleGetRole = (item: usersListModel) => {
+  if (item.is_god) return 'god user';
+  else if (item.is_super_user) return 'super user';
+  else return 'user';
+};
+
+onMounted(async () => {
+  useAuth.usersListData = null;
+  // await fetchUserList();
+});
 </script>
 
 <style scoped>
-  .dashboard-container {
-    width: 100%;
-    height: calc(100vh - 100px) !important;
-  }
+.dashboard-container {
+  width: 100%;
+  height: calc(100vh - 100px) !important;
+}
 
-  .container {
-    background-color: #1c1c21;
-  }
+.container {
+  background-color: #1c1c21;
+}
 
-  .text-custom {
-    font-size: 30px;
-  }
+.text-custom {
+  font-size: 30px;
+}
 </style>
