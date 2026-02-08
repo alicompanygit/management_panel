@@ -1,6 +1,6 @@
 <template>
   <div
-    class="dashboard-container d-flex justify-center align-center text-white"
+    class="dashboard-container dashboard-user-management d-flex justify-center align-center text-white px-4"
   >
     <base-table-server
       :headers="tableHeaders"
@@ -8,14 +8,18 @@
       :loading="loading"
       :totalItems="tableData?.total || 0"
       @pageControler="onPageControler"
+      class="w-100 rounded rounded-lg"
     >
       <template v-slot:role="{ item }">
         <base-chip :text="handleGetRole(item)" />
       </template>
       <template v-slot:action="{ item }">
         <base-button
+          @click="handleChangeRole(item.is_super_user, item)"
           v-if="!item.is_god"
-          :text="item.is_super_user ? 'ChangeToUser' : 'ChangeToSuperUser'"
+          :name="item.is_super_user ? 'ChangeToUser' : 'ChangeToSuperUser'"
+          variant="outlined"
+          density="comfortable"
         />
         <span v-else v-text="'-'" />
       </template>
@@ -65,9 +69,17 @@ const handleGetRole = (item: usersListModel) => {
   else return 'user';
 };
 
+const handleChangeRole = async (isSuperUser: boolean, user: usersListModel) => {
+  if (!user.id) return;
+
+  if (isSuperUser) await useAuth.apiRemoveSuperUser(user.id);
+  else await useAuth.apiAddSuperUser(user.id);
+
+  await fetchUserList();
+};
+
 onMounted(async () => {
   useAuth.usersListData = null;
-  // await fetchUserList();
 });
 </script>
 
@@ -83,5 +95,14 @@ onMounted(async () => {
 
 .text-custom {
   font-size: 30px;
+}
+</style>
+
+<style>
+.dashboard-user-management {
+  .v-table {
+    color: #ffffff;
+    background-color: #26262c;
+  }
 }
 </style>
