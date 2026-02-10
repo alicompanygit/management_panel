@@ -2,6 +2,16 @@
   <div
     class="dashboard-container dashboard-user-management d-flex justify-center align-center text-white px-4"
   >
+    <div
+      class="base-color w-100 px-4 py-3 my-8 rounded-lg font-weight-bold"
+      style="color: #ffd933; font-size: 17px"
+    >
+      {{ t('UserManagement') }}
+    </div>
+  </div>
+  <div
+    class="dashboard-container dashboard-user-management d-flex justify-center align-center text-white px-4"
+  >
     <base-table-server
       :headers="tableHeaders"
       :items="tableData?.users ?? []"
@@ -11,7 +21,10 @@
       class="w-100 rounded rounded-lg"
     >
       <template v-slot:role="{ item }">
-        <base-chip :text="handleGetRole(item)" />
+        <base-chip
+          :text="handleGetRole(item)"
+          :color="item.is_super_user ? '#da8989' : '#FFD933'"
+        />
       </template>
       <template v-slot:action="{ item }">
         <base-button
@@ -20,6 +33,7 @@
           :name="item.is_super_user ? 'ChangeToUser' : 'ChangeToSuperUser'"
           variant="outlined"
           density="comfortable"
+          :color="item.is_super_user ? '#da8989' : '#FFD933'"
         />
         <span v-else v-text="'-'" />
       </template>
@@ -86,7 +100,8 @@ onMounted(async () => {
 <style scoped>
 .dashboard-container {
   width: 100%;
-  height: calc(100vh - 100px) !important;
+  max-height: calc(100vh - 100px) !important;
+  align-items: start !important;
 }
 
 .container {
@@ -95,6 +110,10 @@ onMounted(async () => {
 
 .text-custom {
   font-size: 30px;
+}
+
+.base-color {
+  background-color: #26262c;
 }
 </style>
 

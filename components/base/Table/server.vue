@@ -118,10 +118,6 @@ const props = defineProps({
     type: String,
     default: false,
   },
-  skeletonLoading: {
-    type: Boolean,
-    default: true,
-  },
 });
 
 const onUpdateSelected = (newSelected) => {

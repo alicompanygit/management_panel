@@ -48,20 +48,20 @@
     ></base-form-text-field>
     <div class="my-4">
       <NuxtLink
-          to="/auth/login"
-          class="text-primary text-body-1 opacity-1 font-weight-medium "
-        >
-          {{ $t('Login') }}
-        </NuxtLink>    
+        to="/auth/login"
+        class="text-primary text-body-1 opacity-1 font-weight-medium"
+      >
+        {{ $t('Login') }}
+      </NuxtLink>
     </div>
     <v-btn
       size="large"
       rounded="pill"
       :loading="isLoading"
-      color="primary"
       block
       type="submit"
       flat
+      color="#FFD933"
     >
       {{ $t('Register') }}
     </v-btn>
@@ -72,8 +72,8 @@
     color="error"
     location="top left"
   >
-    <v-icon icon="material-symbols:error-outline-rounded"/>
-    {{ t( errorRegisterText ) }}
+    <v-icon icon="material-symbols:error-outline-rounded" />
+    {{ t(errorRegisterText) }}
   </v-snackbar>
 </template>
 
@@ -86,7 +86,7 @@ import { useAuth } from '~/composables/auth';
 
 const { t } = useI18n();
 
-const errorRegisterText = ref('AnErrorOccurred')
+const errorRegisterText = ref('AnErrorOccurred');
 const showPassword = ref(false);
 const isLoading = ref(false);
 const showAlert = ref(false);
@@ -95,14 +95,14 @@ const form = ref({
   email: '',
   name: '',
   password: '',
-})
-const passwordConfirm = ref('')
+});
+const passwordConfirm = ref('');
 
 const passwordConfirmRule = (value: string) => {
-  if (!value)  return true
+  if (!value) return true;
 
   return value === form.value.password || t('PasswordsDoNotMatch');
-}
+};
 
 const register = async () => {
   const { valid } = await loginForm.value.validate();
@@ -119,22 +119,21 @@ const register = async () => {
   });
 
   isLoading.value = true;
-  const res = await useAuth.apiAddUser(form.value)
+  const res = await useAuth.apiAddUser(form.value);
   isLoading.value = false;
 
-  if (res.message) navigateTo('/auth/login')
+  if (res.message) navigateTo('/auth/login');
   else if (res.error) {
-    errorRegisterText.value = res.error
-    showAlert.value = true
-  }
-  else {
-    errorRegisterText.value = 'AnErrorOccurred'
-    showAlert.value = true
+    errorRegisterText.value = res.error;
+    showAlert.value = true;
+  } else {
+    errorRegisterText.value = 'AnErrorOccurred';
+    showAlert.value = true;
   }
 };
 </script>
 <style scoped>
-.loginForm{
+.loginForm {
   min-width: 300px;
 }
 </style>

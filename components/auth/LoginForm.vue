@@ -25,20 +25,20 @@
     ></base-form-text-field>
     <div class="my-4">
       <NuxtLink
-          to="/auth/register"
-          class="text-primary text-body-1 opacity-1 font-weight-medium "
-        >
-          {{ $t('Register') }}
-        </NuxtLink>    
+        to="/auth/register"
+        class="text-primary text-body-1 opacity-1 font-weight-medium"
+      >
+        {{ $t('Register') }}
+      </NuxtLink>
     </div>
     <v-btn
       size="large"
       rounded="pill"
       :loading="isLoading"
-      color="primary"
       block
       type="submit"
       flat
+      color="#FFD933"
     >
       {{ $t('Login') }}
     </v-btn>
@@ -49,7 +49,7 @@
     color="error"
     location="top left"
   >
-    <v-icon icon="material-symbols:error-outline-rounded"/>
+    <v-icon icon="material-symbols:error-outline-rounded" />
     {{ t('WrongEmailOrPassword') }}
   </v-snackbar>
 </template>
@@ -69,8 +69,8 @@ const showAlert = ref(false);
 const loginForm = ref(null);
 const form = ref({
   email: '',
-  password: ''
-})
+  password: '',
+});
 
 const login = async () => {
   const { valid } = await loginForm.value.validate();
@@ -87,16 +87,16 @@ const login = async () => {
   });
 
   isLoading.value = true;
-  const user = await useAuth.apiUserLogin(form.value)
+  const user = await useAuth.apiUserLogin(form.value);
   isLoading.value = false;
 
-  if(user && user.id) {
+  if (user && user.id) {
     navigateTo('/');
-  } else showAlert.value = true
+  } else showAlert.value = true;
 };
 </script>
 <style scoped>
-.loginForm{
+.loginForm {
   min-width: 300px;
 }
 </style>
