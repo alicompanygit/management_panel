@@ -6,6 +6,7 @@
           >ff</v-app-bar
         >
         <v-navigation-drawer
+        
           left
           class="leftSidebar"
           :rail="false"
@@ -43,10 +44,10 @@
 </template>
 
 <script setup lang="ts">
+import { navigateTo } from 'nuxt/app';
 import { useI18n } from 'vue-i18n';
 import { useRtl, useTheme } from 'vuetify';
 import { useAuth } from '~/composables/auth';
-import { navigateTo } from 'nuxt/app';
 
 const theme = useTheme();
 theme.global.name.value = 'light';
