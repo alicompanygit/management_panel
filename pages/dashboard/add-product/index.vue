@@ -66,15 +66,59 @@
       </v-row>
     </div>
   </div>
+  <div
+    class="dashboard-container dashboard-user-management d-flex justify-center align-center text-white px-4"
+  >
+    <base-table-server
+      :headers="tableHeaders"
+      :items="tableData?.banners ?? []"
+      :loading="loading"
+      :totalItems="tableData?.count || 0"
+      class="w-100 rounded rounded-lg"
+    >
+      <template v-slot:created_at="{ item }"> </template>
+      <template v-slot:image="{ item }">
+        <div class="d-flex justify-center">
+          <img
+            v-if="item.image"
+            alt="Banner"
+            width="40"
+            height="40"
+            style="object-fit: cover; border-radius: 50%"
+          />
+        </div>
+      </template>
+
+      <template v-slot:is_active="{ item }">
+        <div class="d-flex justify-center">
+          <v-switch
+            :label="item.is_active ? 'فعال' : 'غیرفعال'"
+            :model-value="item.is_active"
+            :color="item.is_active ? '#da8989' : '#FFD933'"
+          ></v-switch>
+        </div>
+      </template>
+    </base-table-server>
+  </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
+import { useI18n } from 'vue-i18n';
 import { useProduct } from '~/composables/product';
 
 definePageMeta({ layout: 'dashboard' });
 
+const { t } = useI18n();
+
 const loading = ref(false);
+const tableHeaders = ref([
+  { title: t('Index'), key: 'index', align: 'start' },
+  { title: t('شناسه'), key: 'id' },
+  { title: t('تاریخ ایجاد'), key: 'created_at' },
+  { title: t('تصویر'), key: 'image' },
+  { title: t('وضعیت'), key: 'is_active' },
+]);
 
 const textFields = [
   { model: 'brand_name', label: 'نام برند' },
@@ -103,6 +147,8 @@ const form = ref<any>({
   cover: null,
   gallery: [] as File[],
 });
+
+const tableData = computed(() => useProduct.bannerData);
 
 const handleGalleryChange = (file: File | null, index: number) => {
   if (!file) {
