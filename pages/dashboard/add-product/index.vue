@@ -1,127 +1,146 @@
 <template>
   <div
-    class="dashboard-container dashboard-user-management d-flex justify-center align-center text-white px-4"
+    class="dashboard-container d-flex justify-center align-center text-white px-4"
   >
     <div
       class="base-color w-100 px-4 py-3 my-8 rounded-lg font-weight-bold"
       style="color: #ffd933; font-size: 17px"
     >
-      {{ t('UserManagement') }}
+      افزودن محصول
     </div>
   </div>
+
   <div
-    class="dashboard-container dashboard-user-management d-flex justify-center align-center text-white px-4"
+    class="dashboard-container d-flex justify-center align-center text-white px-4"
   >
-    <base-table-server
-      :headers="tableHeaders"
-      :items="tableData?.users ?? []"
-      :loading="loading"
-      :totalItems="tableData?.total || 0"
-      @pageControler="onPageControler"
-      class="w-100 rounded rounded-lg"
+    <div
+      class="base-color w-100 px-4 py-3 mb-8 rounded-lg font-weight-bold"
+      style="color: #ffd933; font-size: 17px"
     >
-      <template v-slot:role="{ item }">
-        <base-chip
-          :text="handleGetRole(item)"
-          :color="item.is_super_user ? '#da8989' : '#FFD933'"
-        />
-      </template>
-      <template v-slot:action="{ item }">
-        <base-button
-          @click="handleChangeRole(item.is_super_user, item)"
-          v-if="!item.is_god"
-          :name="item.is_super_user ? 'ChangeToUser' : 'ChangeToSuperUser'"
-          variant="outlined"
-          density="comfortable"
-          :color="item.is_super_user ? '#da8989' : '#FFD933'"
-        />
-        <span v-else v-text="'-'" />
-      </template>
-    </base-table-server>
+      <v-row>
+        <!-- TEXT FIELDS -->
+        <v-col cols="3" v-for="field in textFields" :key="field.model">
+          <base-form-text-field
+            v-model="form[field.model]"
+            :label="field.label"
+            placeholder="وارد کنید"
+            clearable
+          />
+        </v-col>
+
+        <!-- COVER -->
+        <v-col cols="3">
+          <span class="input-label">کاور</span>
+          <v-file-input
+            v-model="form.cover"
+            accept="image/*"
+            clearable
+            hide-details
+            density="compact"
+          />
+        </v-col>
+
+        <!-- GALLERY 1-5 -->
+        <v-col cols="3" v-for="i in 5" :key="i">
+          <span class="input-label">تصویر {{ i }}</span>
+          <v-file-input
+            :model-value="form.gallery[i - 1] || null"
+            @update:modelValue="(val) => handleGalleryChange(val, i - 1)"
+            accept="image/*"
+            clearable
+            hide-details
+            density="compact"
+          />
+        </v-col>
+
+        <!-- SUBMIT -->
+        <v-col cols="12" class="d-flex justify-end">
+          <base-button
+            @click="handleSubmit"
+            name="افزودن"
+            color="#ffd933"
+            class="px-8"
+            :loading="loading"
+          />
+        </v-col>
+      </v-row>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, computed } from 'vue';
-import { useAuth, type usersListModel } from '~/composables/auth';
-import { useI18n } from 'vue-i18n';
+import { ref } from 'vue';
+import { useProduct } from '~/composables/product';
 
-definePageMeta({
-  layout: 'dashboard',
-});
-
-const { t } = useI18n();
+definePageMeta({ layout: 'dashboard' });
 
 const loading = ref(false);
-const pageNumber = ref(1);
-const tableHeaders = ref([
-  { title: t('Index'), key: 'index', align: 'start' },
-  { title: t('UserName'), key: 'name', align: 'start' },
-  { title: t('Email'), key: 'email' },
-  { title: t('Role'), key: 'role' },
-  { title: t('Action'), key: 'action' },
-]);
 
-const tableData = computed(() => useAuth.usersListData);
+const textFields = [
+  { model: 'brand_name', label: 'نام برند' },
+  { model: 'tire_name', label: 'نام تایر' },
+  { model: 'product_code', label: 'شناسه محصول' },
+  { model: 'type', label: 'نوع' },
+  { model: 'tire_size', label: 'سایز تایر' },
+  { model: 'width', label: 'عرض' },
+  { model: 'color', label: 'رنگ' },
+  { model: 'quality', label: 'quality' },
+  { model: 'bolt', label: 'bolt' },
+  { model: 'cb', label: 'cb' },
+];
 
-const onPageControler = (info?: any) => {
-  if (info) {
-    pageNumber.value = info.page;
+const form = ref<any>({
+  brand_name: '',
+  tire_name: '',
+  product_code: '',
+  type: '',
+  tire_size: '',
+  width: '',
+  color: '',
+  quality: '',
+  bolt: '',
+  cb: '',
+  cover: null,
+  gallery: [] as File[],
+});
+
+const handleGalleryChange = (file: File | null, index: number) => {
+  if (!file) {
+    form.value.gallery.splice(index, 1);
+    return;
   }
-  fetchUserList();
+
+  form.value.gallery[index] = file;
 };
 
-const fetchUserList = async () => {
+const handleSubmit = async () => {
   loading.value = true;
-  await useAuth.apiFetchUsersList(pageNumber.value);
+
+  const formData = new FormData();
+
+  Object.keys(form.value).forEach((key) => {
+    if (key === 'gallery') return;
+    if (form.value[key]) formData.append(key, form.value[key]);
+  });
+
+  if (form.value.cover) formData.append('cover', form.value.cover);
+
+  form.value.gallery.forEach((file: File) => {
+    formData.append('gallery', file);
+  });
+
+  await useProduct.apiAddProduct(formData);
+
   loading.value = false;
 };
-
-const handleGetRole = (item: usersListModel) => {
-  if (item.is_god) return 'god user';
-  else if (item.is_super_user) return 'super user';
-  else return 'user';
-};
-
-const handleChangeRole = async (isSuperUser: boolean, user: usersListModel) => {
-  if (!user.id) return;
-
-  if (isSuperUser) await useAuth.apiRemoveSuperUser(user.id);
-  else await useAuth.apiAddSuperUser(user.id);
-
-  await fetchUserList();
-};
-
-onMounted(async () => {
-  useAuth.usersListData = null;
-});
 </script>
 
 <style scoped>
 .dashboard-container {
   width: 100%;
-  max-height: calc(100vh - 100px) !important;
   align-items: start !important;
 }
-
-.container {
-  background-color: #1c1c21;
-}
-
-.text-custom {
-  font-size: 30px;
-}
-
 .base-color {
   background-color: #26262c;
-}
-</style>
-
-<style>
-.dashboard-user-management {
-  .v-table {
-    color: #ffffff;
-    background-color: #26262c;
-  }
 }
 </style>

@@ -24,6 +24,24 @@ body {
   background-color: #030306 !important;
 }
 
+.v-data-table-footer__items-per-page {
+  display: none !important;
+}
+.v-input--density-default {
+  --v-input-control-height: 45px !important;
+}
+
+.v-field {
+  height: 45px !important;
+  min-height: 45px !important;
+}
+
+.v-field__field {
+  height: 45px !important;
+  min-height: 45px !important;
+}
+
+
 .text-secondary2 {
   color: #FFD933;
 }

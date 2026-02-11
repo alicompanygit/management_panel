@@ -10,10 +10,10 @@
     </div>
   </div>
   <div
-    class="dashboard-container dashboard-user-management d-flex justify-center align-center text-white px-4"
+    class="dashboard-container -user-management d-flex justify-center align-center text-white px-4"
   >
     <div
-      class="base-color w-100 px-4 py-3 my-8 rounded-lg font-weight-bold d-flex justify-space-between align-center ga-5"
+      class="base-color w-100 px-4 py-3 mb-8 rounded-lg font-weight-bold d-flex justify-space-between align-center ga-5"
       style="color: #ffd933; font-size: 17px"
     >
       <v-file-input
@@ -51,6 +51,19 @@
       <template v-slot:created_at="{ item }">
         {{ returnDate(item.created_at) }}
       </template>
+      <template v-slot:image="{ item }">
+        <div class="d-flex justify-center">
+          <img
+            v-if="item.image"
+            :src="getFullImageUrl(item.image)"
+            alt="Banner"
+            width="40"
+            height="40"
+            style="object-fit: cover; border-radius: 50%"
+          />
+        </div>
+      </template>
+
       <template v-slot:is_active="{ item }">
         <div class="d-flex justify-center">
           <v-switch
@@ -83,6 +96,7 @@ const tableHeaders = ref([
   { title: t('Index'), key: 'index', align: 'start' },
   { title: t('شناسه'), key: 'id' },
   { title: t('تاریخ ایجاد'), key: 'created_at' },
+  { title: t('تصویر'), key: 'image' },
   { title: t('وضعیت'), key: 'is_active' },
 ]);
 
@@ -118,6 +132,11 @@ const returnDate = (input: string) => {
   const [year, month, day] = datePart.split('-');
   const [hour, minute] = timePart.split(':');
   return `${hour}:${minute} - ${year}/${day}/${month}`;
+};
+
+const getFullImageUrl = (path: string) => {
+  if (!path) return '';
+  return `${useBanner.config.public.baseUrl}${path}`;
 };
 
 onMounted(async () => {

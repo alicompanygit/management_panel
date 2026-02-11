@@ -134,6 +134,6 @@ const computedMenuProps = computed(() => {
 }
 .v-autocomplete .v-field__input,
 .v-autocomplete .v-field.v-field--focused input {
-  font-size: 13px !important;
+  font-size: 12px !important;
 }
 </style>
