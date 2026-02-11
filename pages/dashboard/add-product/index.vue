@@ -17,53 +17,62 @@
       class="base-color w-100 px-4 py-3 mb-8 rounded-lg font-weight-bold"
       style="color: #ffd933; font-size: 17px"
     >
-      <v-row>
-        <!-- TEXT FIELDS -->
-        <v-col cols="3" v-for="field in textFields" :key="field.model">
-          <base-form-text-field
-            v-model="form[field.model]"
-            :label="field.label"
-            placeholder="وارد کنید"
-            clearable
-          />
-        </v-col>
+      <v-form ref="formRef">
+        <v-row>
+          <v-col cols="3" v-for="field in textFields" :key="field.model">
+            <base-form-text-field
+              v-model="form[field.model]"
+              :label="field.label"
+              placeholder="وارد کنید"
+              clearable
+              :rules="
+                ['brand_name', 'tire_name', 'product_code', 'type'].includes(
+                  field.model
+                )
+                  ? [requiredRule]
+                  : []
+              "
+            />
+          </v-col>
 
-        <!-- COVER -->
-        <v-col cols="3">
-          <span class="input-label">کاور</span>
-          <v-file-input
-            v-model="form.cover"
-            accept="image/*"
-            clearable
-            hide-details
-            density="compact"
-          />
-        </v-col>
+          <v-col cols="3">
+            <span class="input-label">کاور</span>
+            <v-file-input
+              v-model="form.cover"
+              accept="image/*"
+              prepend-icon=""
+              clearable
+              hide-details
+              density="compact"
+              label="انتخاب تصویر"
+              :rules="[requiredRule]"
+            />
+          </v-col>
 
-        <!-- GALLERY 1-5 -->
-        <v-col cols="3" v-for="i in 5" :key="i">
-          <span class="input-label">تصویر {{ i }}</span>
-          <v-file-input
-            :model-value="form.gallery[i - 1] || null"
-            @update:modelValue="(val) => handleGalleryChange(val, i - 1)"
-            accept="image/*"
-            clearable
-            hide-details
-            density="compact"
-          />
-        </v-col>
+          <v-col cols="3" v-for="i in 5" :key="i">
+            <span class="input-label">تصویر {{ i }}</span>
+            <v-file-input
+              v-model="form.gallery[i - 1]"
+              accept="image/*"
+              prepend-icon=""
+              clearable
+              hide-details
+              density="compact"
+              label="انتخاب تصویر"
+            />
+          </v-col>
 
-        <!-- SUBMIT -->
-        <v-col cols="12" class="d-flex justify-end">
-          <base-button
-            @click="handleSubmit"
-            name="افزودن"
-            color="#ffd933"
-            class="px-8"
-            :loading="loading"
-          />
-        </v-col>
-      </v-row>
+          <v-col cols="12" class="d-flex justify-end">
+            <base-button
+              @click="handleSubmit"
+              name="افزودن"
+              color="#ffd933"
+              class="px-8"
+              :loading="loading"
+            />
+          </v-col>
+        </v-row>
+      </v-form>
     </div>
   </div>
   <div
@@ -103,6 +112,7 @@
 </template>
 
 <script setup lang="ts">
+import { requiredRule } from '@/utils/validation';
 import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useProduct } from '~/composables/product';
@@ -111,6 +121,7 @@ definePageMeta({ layout: 'dashboard' });
 
 const { t } = useI18n();
 
+const formRef = ref<any>(null);
 const loading = ref(false);
 const tableHeaders = ref([
   { title: t('Index'), key: 'index', align: 'start' },
@@ -145,14 +156,31 @@ const form = ref<any>({
   bolt: '',
   cb: '',
   cover: null,
-  gallery: [] as File[],
+  gallery: Array(5).fill(null) as (File | null)[],
 });
 
 const tableData = computed(() => useProduct.bannerData);
 
+const resetForm = () => {
+  form.value = {
+    brand_name: '',
+    tire_name: '',
+    product_code: '',
+    type: '',
+    tire_size: '',
+    width: '',
+    color: '',
+    quality: '',
+    bolt: '',
+    cb: '',
+    cover: null,
+    gallery: Array(5).fill(null),
+  };
+};
+
 const handleGalleryChange = (file: File | null, index: number) => {
   if (!file) {
-    form.value.gallery.splice(index, 1);
+    delete form.value.gallery[index];
     return;
   }
 
@@ -160,23 +188,29 @@ const handleGalleryChange = (file: File | null, index: number) => {
 };
 
 const handleSubmit = async () => {
+  if (!formRef.value) return;
+
+  const { valid } = await formRef.value.validate();
+  if (!valid) return;
+
   loading.value = true;
 
-  const formData = new FormData();
-
-  Object.keys(form.value).forEach((key) => {
-    if (key === 'gallery') return;
-    if (form.value[key]) formData.append(key, form.value[key]);
+  await useProduct.apiAddProduct({
+    brand_name: form.value.brand_name,
+    tire_name: form.value.tire_name,
+    product_code: form.value.product_code,
+    type: form.value.type,
+    tire_size: form.value.tire_size,
+    width: form.value.width,
+    color: form.value.color,
+    quality: form.value.quality,
+    bolt: form.value.bolt,
+    cb: form.value.cb,
+    cover: form.value.cover,
+    gallery: form.value.gallery,
   });
 
-  if (form.value.cover) formData.append('cover', form.value.cover);
-
-  form.value.gallery.forEach((file: File) => {
-    formData.append('gallery', file);
-  });
-
-  await useProduct.apiAddProduct(formData);
-
+  resetForm();
   loading.value = false;
 };
 </script>
