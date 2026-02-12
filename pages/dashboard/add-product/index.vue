@@ -200,14 +200,72 @@
           size="22"
           class="cursor-pointer"
         />
+        <v-icon
+          icon="solar:pen-linear"
+          size="20"
+          class="cursor-pointer ms-2"
+          color="success"
+          @click="openEdit(item)"
+        />
       </template>
     </base-table-server>
   </div>
+
+  <base-modal-drawer
+    v-model="editDrawer"
+    title="ویرایش محصول"
+    @close="editDrawer = false"
+    class="product-edit-drawer"
+  >
+    <template #content>
+      <v-form class="px-4 py-3">
+        <v-row>
+          <v-col cols="6" v-for="field in textFields" :key="field.model">
+            <base-form-text-field
+              v-model="editForm[field.model]"
+              :label="field.label"
+            />
+          </v-col>
+
+          <v-col cols="6">
+            <v-switch
+              v-model="editForm.is_active"
+              :label="editForm.is_active ? 'فعال' : 'غیرفعال'"
+              :color="editForm.is_active ? '#da8989' : '#FFD933'"
+            />
+          </v-col>
+
+          <v-col cols="6">
+            <v-switch
+              v-model="editForm.is_new"
+              :label="editForm.is_new ? 'جدید' : 'عادی'"
+              :color="editForm.is_new ? '#da8989' : '#FFD933'"
+            />
+          </v-col>
+
+          <v-col cols="6">
+            <v-file-input v-model="editForm.cover" label="کاور جدید" />
+          </v-col>
+        </v-row>
+      </v-form>
+    </template>
+
+    <template #footer>
+      <div class="pa-4 d-flex justify-end">
+        <base-button
+          name="تایید"
+          color="#FFD933"
+          :loading="editLoading"
+          @click="submitEdit"
+        />
+      </div>
+    </template>
+  </base-modal-drawer>
 </template>
 
 <script setup lang="ts">
 import { requiredRule } from '@/utils/validation';
-import { computed, onMounted, ref } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useProduct } from '~/composables/product';
 
@@ -215,9 +273,13 @@ definePageMeta({ layout: 'dashboard' });
 
 const { t } = useI18n();
 
-const formRef = ref<any>(null);
-const loading = ref(false);
+const selectedProduct = ref<any>(null);
 const loadingAddProduct = ref(false);
+const editLoading = ref(false);
+const formRef = ref<any>(null);
+const editDrawer = ref(false);
+const loading = ref(false);
+const editForm = ref<any>({});
 const getFullImageUrl = (path: string) => {
   if (!path) return '';
   return `${useProduct.config.public.baseUrl}${path}`;
@@ -357,6 +419,64 @@ const handleChangeNew = async (item: any, value: boolean) => {
   await useProduct.apiChangeNew(item.id, value);
   await fetchProductList();
 };
+
+const openEdit = (item: any) => {
+  selectedProduct.value = item;
+
+  editForm.value = {
+    brand_name: item.brand_name,
+    tire_name: item.tire_name,
+    product_code: item.product_code,
+    type: item.type,
+    tire_size: item.tire_size,
+    width: item.width,
+    color: item.color,
+    quality: item.quality,
+    bolt: item.bolt,
+    cb: item.cb,
+    is_active: item.is_active,
+    is_new: item.is_new,
+    cover: null,
+    gallery: [],
+  };
+
+  editDrawer.value = true;
+};
+
+const submitEdit = async () => {
+  if (!selectedProduct.value?.id) return;
+
+  editLoading.value = true;
+
+  await useProduct.apiEditProduct(selectedProduct.value.id, editForm.value);
+
+  editLoading.value = false;
+  editDrawer.value = false;
+
+  await fetchProductList();
+};
+
+watch(editDrawer, (val: boolean) => {
+  if (!val) {
+    editForm.value = {
+      brand_name: null,
+      tire_name: null,
+      product_code: null,
+      type: null,
+      tire_size: null,
+      width: null,
+      color: null,
+      quality: null,
+      bolt: null,
+      cb: null,
+      cover: null,
+      gallery: [],
+      is_active: false,
+      is_new: false,
+    };
+    selectedProduct.value = null; // اختیاری
+  }
+});
 
 onMounted(async () => {
   await fetchProductList();

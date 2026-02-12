@@ -158,14 +158,12 @@ const getScrollableElement = () => {
 
 watch(
   () => props.modelValue,
-  (newVal) => {
+  (newVal: boolean) => {
     const scrollableElement = getScrollableElement();
     if (newVal) {
-      // Add the class to disable scrolling
-      scrollableElement.classList.add('no-scroll');
+      scrollableElement?.classList.add('no-scroll');
     } else {
-      // Remove the class to enable scrolling
-      scrollableElement.classList.remove('no-scroll');
+      scrollableElement?.classList.remove('no-scroll');
     }
   },
   { deep: true }
@@ -217,5 +215,21 @@ onMounted(() => {
   color: rgb(var(--v-theme-grey6));
   font-size: 14px;
   font-weight: 600;
+}
+</style>
+<style scoped lang="scss">
+.custom-navigation ::v-deep(.v-navigation-drawer__content),
+.custom-navigation ::v-deep(.v-navigation-drawer__append) {
+  background-color: #26262c !important;
+  color: #fff !important;
+  border-color: #444 !important;
+}
+
+.custom-navigation ::v-deep(.v-navigation-drawer__content) {
+  border-radius: 10px 10px 0 0;
+}
+
+.custom-navigation ::v-deep(.v-navigation-drawer__append) {
+  border-radius: 0 0 10px 10px;
 }
 </style>

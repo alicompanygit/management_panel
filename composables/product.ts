@@ -89,6 +89,8 @@ export class Product {
     cb?: string;
     cover: File;
     gallery?: File[];
+    is_active: boolean;
+    is_new: boolean;
   }) {
     try {
       const formData = new FormData();
@@ -131,6 +133,8 @@ export class Product {
       cb: string;
       cover: File;
       gallery: File[];
+      is_active: boolean;
+      is_new: boolean;
     }>
   ) {
     try {
