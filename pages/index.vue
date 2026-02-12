@@ -7,7 +7,12 @@
     ></v-carousel-item>
   </v-carousel>
   <v-sheet class="mx-auto mt-10" elevation="8" max-width="800">
-    <v-slide-group class="pa-4" selected-class="bg-success" show-arrows>
+    <v-slide-group
+      class="pa-4"
+      selected-class="bg-success"
+      show-arrows
+      id="newproduct"
+    >
       <v-slide-group-item
         v-for="n in 15"
         :key="n"

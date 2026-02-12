@@ -21,7 +21,9 @@
                 ]"
                 style="border: 1px solid #ffd933; height: max-content"
               >
-                {{ locale === 'en' ? 'fa' : 'en' }}
+                <span :class="{ 'opacity-50': locale === 'fa' }">en</span>
+                <span class="px-1">/</span>
+                <span :class="{ 'opacity-50': locale === 'en' }">fa</span>
               </div>
               <span v-if="!useAuth.user?.id" class="text-waith ms-4">{{
                 t('Login')
@@ -29,12 +31,12 @@
             </v-col>
             <v-col cols="6" class="d-flex justify-end align-center">
               <span
-                class="text-waith me-4 cursor-pointer"
-                @click="navigateTo('#newproduct')"
+                class="text-waith me-9 cursor-pointer"
+                @click="navigateTo('/#newproduct')"
                 >{{ t('NewProduct') }}</span
               >
               <span
-                class="text-waith me-4 cursor-pointer"
+                class="text-waith me-9 cursor-pointer"
                 @click="navigateTo('/')"
                 >{{ t('Home') }}</span
               >

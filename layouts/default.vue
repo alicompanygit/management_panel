@@ -31,12 +31,12 @@
             </v-col>
             <v-col cols="6" class="d-flex justify-end align-center">
               <span
-                class="text-waith me-4 cursor-pointer"
-                @click="navigateTo('#newproduct')"
+                class="text-waith me-9 cursor-pointer"
+                @click="navigateTo('/#newproduct')"
                 >{{ t('NewProduct') }}</span
               >
               <span
-                class="text-waith me-4 cursor-pointer"
+                class="text-waith me-9 cursor-pointer"
                 @click="navigateTo('/')"
                 >{{ t('Home') }}</span
               >
