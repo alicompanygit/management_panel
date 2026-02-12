@@ -37,6 +37,9 @@ interface IApiResponse<T = any> {
 }
 
 export class Product {
+  fullProductData = {};
+  dashboardData = {};
+
   private get config() {
     return useRuntimeConfig();
   }
@@ -198,11 +201,17 @@ export class Product {
 
   async apiGetProductsFull() {
     try {
-      return await this.fetchWithAuth<IApiResponse<IProductFull>>(
+      const res = await this.fetchWithAuth<IApiResponse<IProductFull>>(
         `${this.config.public.baseUrl}/get_products_full`,
         { method: 'GET' },
         true
       );
+
+      console.log(res);
+
+      if (res && res.count && res.count > 0) this.fullProductData = res;
+      else this.fullProductData = {};
+      console.log(this.fullProductData);
     } catch (error) {
       console.error('apiGetProductsFull error:', error);
       return false;
@@ -216,6 +225,21 @@ export class Product {
         { method: 'GET' },
         true
       );
+    } catch (error) {
+      console.error('apiGetProductDetail error:', error);
+      return false;
+    }
+  }
+
+  async apiDashboardData() {
+    try {
+      const res = await this.fetchWithAuth<IApiResponse<IProductFull>>(
+        `${this.config.public.baseUrl}/dashboard_stats`,
+        { method: 'GET' }
+      );
+
+      if (res) this.dashboardData = res;
+      else this.dashboardData = {};
     } catch (error) {
       console.error('apiGetProductDetail error:', error);
       return false;

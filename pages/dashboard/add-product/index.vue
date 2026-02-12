@@ -20,7 +20,26 @@
       <v-form ref="formRef">
         <v-row>
           <v-col cols="3" v-for="field in textFields" :key="field.model">
+            <base-form-select
+              :items="[
+                { title: 'Normal', value: 'normal' },
+                { title: 'Forged', value: 'forged' },
+              ]"
+              v-if="field.model === 'type'"
+              v-model="form[field.model]"
+              :label="field.label"
+              placeholder="وارد کنید"
+              clearable
+              :rules="
+                ['brand_name', 'tire_name', 'product_code', 'type'].includes(
+                  field.model
+                )
+                  ? [requiredRule]
+                  : []
+              "
+            ></base-form-select>
             <base-form-text-field
+              v-else
               v-model="form[field.model]"
               :label="field.label"
               placeholder="وارد کنید"
@@ -68,7 +87,7 @@
               name="افزودن"
               color="#ffd933"
               class="px-8"
-              :loading="loading"
+              :loading="loadingAddProduct"
             />
           </v-col>
         </v-row>
@@ -80,32 +99,72 @@
   >
     <base-table-server
       :headers="tableHeaders"
-      :items="tableData?.banners ?? []"
+      :items="tableData?.products ?? []"
       :loading="loading"
       :totalItems="tableData?.count || 0"
       class="w-100 rounded rounded-lg"
     >
-      <template v-slot:created_at="{ item }"> </template>
-      <template v-slot:image="{ item }">
+      <template v-slot:index="{ index }">{{ index + 1 }}</template>
+
+      <template v-slot:brand_name="{ item }">{{
+        item.brand_name || '-'
+      }}</template>
+      <template v-slot:tire_name="{ item }">{{
+        item.tire_name || '-'
+      }}</template>
+      <template v-slot:product_code="{ item }">{{
+        item.product_code || '-'
+      }}</template>
+      <template v-slot:type="{ item }">{{ item.type || '-' }}</template>
+      <template v-slot:tire_size="{ item }">{{
+        item.tire_size || '-'
+      }}</template>
+      <template v-slot:width="{ item }">{{ item.width || '-' }}</template>
+      <template v-slot:color="{ item }">{{ item.color || '-' }}</template>
+      <template v-slot:quality="{ item }">{{ item.quality || '-' }}</template>
+      <template v-slot:bolt="{ item }">{{ item.bolt || '-' }}</template>
+      <template v-slot:cb="{ item }">{{ item.cb || '-' }}</template>
+
+      <template v-slot:cover="{ item }">
         <div class="d-flex justify-center">
           <img
-            v-if="item.image"
-            alt="Banner"
+            v-if="item.cover"
+            :src="getFullImageUrl(item.cover)"
+            alt="Cover"
             width="40"
             height="40"
-            style="object-fit: cover; border-radius: 50%"
+            style="object-fit: cover; border-radius: 5px"
           />
         </div>
       </template>
 
-      <template v-slot:is_active="{ item }">
-        <div class="d-flex justify-center">
-          <v-switch
-            :label="item.is_active ? 'فعال' : 'غیرفعال'"
-            :model-value="item.is_active"
-            :color="item.is_active ? '#da8989' : '#FFD933'"
-          ></v-switch>
+      <template v-slot:gallery="{ item }">
+        <div class="d-flex gap-2 justify-center">
+          <img
+            v-for="(img, i) in (item.images || []).filter(
+              (img: any) => img.type === 'gallery'
+            )"
+            :key="i"
+            :src="getFullImageUrl(img.url)"
+            width="30"
+            height="30"
+            style="object-fit: cover; border-radius: 5px"
+          />
         </div>
+      </template>
+
+      <template v-slot:created_at="{ item }">
+        {{ returnDate(item.created_at) }}
+      </template>
+
+      <template v-slot:action="{ item }">
+        <v-icon
+          @click="removeProuduct(item)"
+          icon="fluent:delete-24-regular"
+          color="#F95959"
+          size="22"
+          class="cursor-pointer"
+        />
       </template>
     </base-table-server>
   </div>
@@ -113,7 +172,7 @@
 
 <script setup lang="ts">
 import { requiredRule } from '@/utils/validation';
-import { computed, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useProduct } from '~/composables/product';
 
@@ -123,68 +182,83 @@ const { t } = useI18n();
 
 const formRef = ref<any>(null);
 const loading = ref(false);
+const loadingAddProduct = ref(false);
+const getFullImageUrl = (path: string) => {
+  if (!path) return '';
+  return `${useProduct.config.public.baseUrl}${path}`;
+};
+
+const returnDate = (input: string) => {
+  if (!input) return '-';
+  const [datePart, timePart] = input.split('T');
+  const [year, month, day] = datePart.split('-');
+  const [hour, minute] = timePart.split(':');
+  return `${hour}:${minute} - ${year}/${day}/${month}`;
+};
+
 const tableHeaders = ref([
-  { title: t('Index'), key: 'index', align: 'start' },
-  { title: t('شناسه'), key: 'id' },
-  { title: t('تاریخ ایجاد'), key: 'created_at' },
-  { title: t('تصویر'), key: 'image' },
-  { title: t('وضعیت'), key: 'is_active' },
+  { title: 'ردیف', key: 'index' },
+  { title: 'برند', key: 'brand_name' },
+  { title: 'نام تایر', key: 'tire_name' },
+  { title: 'کد محصول', key: 'product_code' },
+  { title: 'نوع', key: 'type' },
+  { title: 'سایز تایر', key: 'tire_size' },
+  { title: 'عرض', key: 'width' },
+  { title: 'رنگ', key: 'color' },
+  { title: 'کیفیت', key: 'quality' },
+  { title: 'bolt', key: 'bolt' },
+  { title: 'CB', key: 'cb' },
+  { title: 'کاور', key: 'cover' },
+  { title: 'گالری', key: 'gallery' },
+  { title: 'تاریخ ایجاد', key: 'created_at' },
+  { title: 'عملیات', key: 'action' },
 ]);
 
 const textFields = [
   { model: 'brand_name', label: 'نام برند' },
   { model: 'tire_name', label: 'نام تایر' },
-  { model: 'product_code', label: 'شناسه محصول' },
+  { model: 'product_code', label: 'کد محصول' },
   { model: 'type', label: 'نوع' },
   { model: 'tire_size', label: 'سایز تایر' },
   { model: 'width', label: 'عرض' },
   { model: 'color', label: 'رنگ' },
-  { model: 'quality', label: 'quality' },
+  { model: 'quality', label: 'کیفیت' },
   { model: 'bolt', label: 'bolt' },
   { model: 'cb', label: 'cb' },
 ];
 
 const form = ref<any>({
-  brand_name: '',
-  tire_name: '',
-  product_code: '',
-  type: '',
-  tire_size: '',
-  width: '',
-  color: '',
-  quality: '',
-  bolt: '',
-  cb: '',
+  brand_name: null,
+  tire_name: null,
+  product_code: null,
+  type: null,
+  tire_size: null,
+  width: null,
+  color: null,
+  quality: null,
+  bolt: null,
+  cb: null,
   cover: null,
   gallery: Array(5).fill(null) as (File | null)[],
 });
 
-const tableData = computed(() => useProduct.bannerData);
+const tableData = computed(() => useProduct.fullProductData);
 
 const resetForm = () => {
   form.value = {
-    brand_name: '',
-    tire_name: '',
-    product_code: '',
-    type: '',
-    tire_size: '',
-    width: '',
-    color: '',
-    quality: '',
-    bolt: '',
-    cb: '',
+    brand_name: null,
+    tire_name: null,
+    product_code: null,
+    type: null,
+    tire_size: null,
+    width: null,
+    color: null,
+    quality: null,
+    bolt: null,
+    cb: null,
     cover: null,
     gallery: Array(5).fill(null),
   };
-};
-
-const handleGalleryChange = (file: File | null, index: number) => {
-  if (!file) {
-    delete form.value.gallery[index];
-    return;
-  }
-
-  form.value.gallery[index] = file;
 };
 
 const handleSubmit = async () => {
@@ -193,26 +267,45 @@ const handleSubmit = async () => {
   const { valid } = await formRef.value.validate();
   if (!valid) return;
 
-  loading.value = true;
+  loadingAddProduct.value = true;
 
-  await useProduct.apiAddProduct({
-    brand_name: form.value.brand_name,
-    tire_name: form.value.tire_name,
-    product_code: form.value.product_code,
-    type: form.value.type,
-    tire_size: form.value.tire_size,
-    width: form.value.width,
-    color: form.value.color,
-    quality: form.value.quality,
-    bolt: form.value.bolt,
-    cb: form.value.cb,
-    cover: form.value.cover,
-    gallery: form.value.gallery,
+  const payload: Record<string, any> = {};
+
+  Object.entries(form.value).forEach(([key, value]) => {
+    if (value == null || value === '') return;
+
+    if (key === 'gallery' && Array.isArray(value)) {
+      const files = value.filter(Boolean);
+      if (files.length > 0) payload[key] = files;
+    } else {
+      payload[key] = value;
+    }
   });
 
+  await useProduct.apiAddProduct(payload);
+
   resetForm();
+  loadingAddProduct.value = false;
+
+  await fetchProductList();
+};
+
+const fetchProductList = async () => {
+  loading.value = true;
+  await useProduct.apiGetProductsFull();
   loading.value = false;
 };
+
+const removeProuduct = async (data: any) => {
+  if (!data.id) return;
+
+  await useProduct.apiRemoveProduct(data.id);
+  await fetchProductList();
+};
+
+onMounted(async () => {
+  await fetchProductList();
+});
 </script>
 
 <style scoped>
