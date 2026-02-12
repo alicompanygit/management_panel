@@ -245,6 +245,30 @@ export class Product {
       return false;
     }
   }
+
+  async apiChangeActive(productId: number, isActive: boolean) {
+    try {
+      return await this.fetchWithAuth<IApiResponse<IProductFull>>(
+        `${this.config.public.baseUrl}/set_product_status/${productId}`,
+        { method: 'PUT', body: JSON.stringify({ is_active: isActive }) }
+      );
+    } catch (error) {
+      console.error('apiChangeActive error:', error);
+      return false;
+    }
+  }
+
+  async apiChangeNew(productId: number, isNew: boolean) {
+    try {
+      return await this.fetchWithAuth<IApiResponse<IProductFull>>(
+        `${this.config.public.baseUrl}/set_product_new/${productId}`,
+        { method: 'PUT', body: JSON.stringify({ is_new: isNew }) }
+      );
+    } catch (error) {
+      console.error('apiChangeNew error:', error);
+      return false;
+    }
+  }
 }
 
 export const useProduct = reactive(new Product());

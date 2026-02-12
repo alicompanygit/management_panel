@@ -81,6 +81,21 @@
             />
           </v-col>
 
+          <v-col cols="3">
+            <v-switch
+              v-model="form.is_active"
+              :label="form.is_active ? 'فعال' : 'غیرفعال'"
+              :color="form.is_active ? '#da8989' : '#FFD933'"
+              inset
+            />
+            <v-switch
+              v-model="form.is_new"
+              :label="form.is_new ? 'جدید' : 'عادی'"
+              :color="form.is_new ? '#da8989' : '#FFD933'"
+              inset
+            />
+          </v-col>
+
           <v-col cols="12" class="d-flex justify-end">
             <base-button
               @click="handleSubmit"
@@ -157,6 +172,26 @@
         {{ returnDate(item.created_at) }}
       </template>
 
+      <template v-slot:is_active="{ item }">
+        <v-switch
+          :model-value="item.is_active"
+          @update:modelValue="(val: any) => handleChangeActiv(item, val)"
+          :color="item.is_active ? '#da8989' : '#FFD933'"
+          inset
+          hide-details
+        />
+      </template>
+
+      <template v-slot:is_new="{ item }">
+        <v-switch
+          :model-value="item.is_new"
+          @update:modelValue="(val: any) => handleChangeNew(item, val)"
+          :color="item.is_new ? '#da8989' : '#FFD933'"
+          inset
+          hide-details
+        />
+      </template>
+
       <template v-slot:action="{ item }">
         <v-icon
           @click="removeProuduct(item)"
@@ -211,6 +246,8 @@ const tableHeaders = ref([
   { title: 'کاور', key: 'cover' },
   { title: 'گالری', key: 'gallery' },
   { title: 'تاریخ ایجاد', key: 'created_at' },
+  { title: 'وضعیت', key: 'is_active' },
+  { title: 'جدید', key: 'is_new' },
   { title: 'عملیات', key: 'action' },
 ]);
 
@@ -240,6 +277,8 @@ const form = ref<any>({
   cb: null,
   cover: null,
   gallery: Array(5).fill(null) as (File | null)[],
+  is_active: false,
+  is_new: false,
 });
 
 const tableData = computed(() => useProduct.fullProductData);
@@ -258,6 +297,8 @@ const resetForm = () => {
     cb: null,
     cover: null,
     gallery: Array(5).fill(null),
+    is_active: false,
+    is_new: false,
   };
 };
 
@@ -300,6 +341,20 @@ const removeProuduct = async (data: any) => {
   if (!data.id) return;
 
   await useProduct.apiRemoveProduct(data.id);
+  await fetchProductList();
+};
+
+const handleChangeActiv = async (item: any, value: boolean) => {
+  if (!item?.id) return;
+
+  await useProduct.apiChangeActive(item.id, value);
+  await fetchProductList();
+};
+
+const handleChangeNew = async (item: any, value: boolean) => {
+  if (!item?.id) return;
+
+  await useProduct.apiChangeNew(item.id, value);
   await fetchProductList();
 };
 
