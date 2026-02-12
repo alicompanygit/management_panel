@@ -8,7 +8,6 @@
         left: 0;
         top: 0;
         bottom: 0;
-        background: radial-gradient(rgb(210, 241, 223), rgb(211, 215, 250), rgb(186, 216, 244)) 0% 0% / 400% 400%;
     }
 
     .auth-header {
@@ -31,7 +30,6 @@
             width: 200px;
             height: 200px;
             border-radius: 100%;
-            background-color: rgb(var(--v-theme-orange));
         }
 
         &::after {
@@ -155,7 +153,6 @@
                 width: 427px;
                 height: 417px;
                 border-radius: 100%;
-                background-color: rgb(var(--v-theme-error));
             }
 
             &::after {

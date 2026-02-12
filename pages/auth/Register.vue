@@ -8,10 +8,15 @@
               <v-card-item class="pa-sm-8">
                 <div
                   class="d-flex justify-center mb-5"
-                  style="font-size: 20px; color: #cfaf24"
+                  style="font-size: 30px; color: #ffd620"
                 >
                   Rims
                 </div>
+                <v-divider
+                  :thickness="2"
+                  color="#FFD933"
+                  class="border-opacity-100"
+                ></v-divider>
                 <AuthRegisterForm />
               </v-card-item>
             </v-card>

@@ -21,4 +21,6 @@ export default {
   FullName: 'نام و نام خانوادگی',
   ChangeToUser: 'تبدیل به user',
   ChangeToSuperUser: 'تبدیل به super user',
+  Home: 'صفحه اصلی',
+  NewProduct: 'محصولات جدید',
 };

@@ -16,12 +16,14 @@
               <div
                 @click="toggleLang"
                 :class="[
-                  'rounded-sm d-flex text-secondary2 py-0 ms-4 cursor-pointer',
+                  'rounded-sm d-flex text-secondary2 py-0 ms-4 ',
                   locale === 'en' ? 'px-2' : 'px-1',
                 ]"
                 style="border: 1px solid #ffd933; height: max-content"
               >
-                {{ locale === 'en' ? 'fa' : 'en' }}
+                <span :class="{ 'opacity-50': locale === 'fa' }">en</span>
+                <span class="px-1">/</span>
+                <span :class="{ 'opacity-50': locale === 'en' }">fa</span>
               </div>
               <span v-if="!useAuth.user?.id" class="text-waith ms-4">{{
                 t('Login')

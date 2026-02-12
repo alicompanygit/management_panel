@@ -21,4 +21,6 @@ export default {
   FullName: 'Full Name',
   ChangeToUser: 'Change to user',
   ChangeToSuperUser: 'Change to super user',
+  Home: 'Home',
+  NewProduct: 'New product',
 };
