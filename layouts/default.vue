@@ -1,42 +1,82 @@
-<script setup lang="ts">
-import { watch } from 'vue';
-import { useI18n } from 'vue-i18n';
-import { useRtl, useTheme } from 'vuetify';
-
-const theme = useTheme()
-theme.global.name.value = 'light'
-
-const { locale } = useI18n()
-const rtl = useRtl()
-
-watch(locale, (val) => {
-  rtl.value = val === 'fa'
-  document.documentElement.dir = val === 'fa' ? 'rtl' : 'ltr'
-  document.body.dir = val === 'fa' ? 'rtl' : 'ltr'
-  document.body.classList.toggle('v-rtl', val === 'fa')
-}, { immediate: true })
-</script>
-
 <template>
   <v-app>
-    <v-app-bar color="primary">
-      <v-app-bar-title>عنوان اپلیکیشن</v-app-bar-title>
-    </v-app-bar>
-
     <v-main>
       <v-container fluid>
-        <router-view /> 
-        <h1>سلام، این صفحه اصلی است</h1>
-        <p>محتوای شما اینجا نمایش داده می‌شود</p>
+        <v-app-bar elevation="0" :height="65" id="top" class="sticky app-bar">
+          <v-row class="px-5">
+            <v-col cols="6" class="d-flex align-center">
+              <base-button
+                v-if="useAuth.user?.is_god || useAuth.user?.is_super_user"
+                name="Dashboard"
+                variant="outlined"
+                density="comfortable"
+                color="#ffd933"
+                @click="navigateTo('/dashboard')"
+              />
+              <div
+                @click="toggleLang"
+                :class="[
+                  'rounded-sm d-flex text-secondary2 py-0 ms-4 cursor-pointer',
+                  locale === 'en' ? 'px-2' : 'px-1',
+                ]"
+                style="border: 1px solid #ffd933; height: max-content"
+              >
+                {{ locale === 'en' ? 'fa' : 'en' }}
+              </div>
+              <span v-if="!useAuth.user?.id" class="text-waith ms-4">{{
+                t('Login')
+              }}</span>
+            </v-col>
+            <v-col cols="6" class="d-flex justify-end align-center">
+              <span
+                class="text-waith me-4 cursor-pointer"
+                @click="navigateTo('#newproduct')"
+                >{{ t('NewProduct') }}</span
+              >
+              <span
+                class="text-waith me-4 cursor-pointer"
+                @click="navigateTo('/')"
+                >{{ t('Home') }}</span
+              >
+              <span class="text-secondary2 title">Rims</span>
+            </v-col>
+          </v-row>
+        </v-app-bar>
+        <router-view />
       </v-container>
+      <v-footer app>
+        <span>© 2024</span>
+      </v-footer>
     </v-main>
-
-    <v-footer app>
-      <span>© 2024</span>
-    </v-footer>
   </v-app>
 </template>
 
+<script setup lang="ts">
+import { navigateTo } from 'nuxt/app';
+import { useI18n } from 'vue-i18n';
+import { useRtl, useTheme } from 'vuetify';
+import { useAuth } from '~/composables/auth';
+
+const theme = useTheme();
+theme.global.name.value = 'light';
+
+const { t, locale } = useI18n({ useScope: 'global' });
+const rtl = useRtl();
+
+const toggleLang = () => {
+  locale.value = locale.value === 'en' ? 'fa' : 'en';
+  rtl.isRtl.value = locale.value === 'fa';
+};
+</script>
+
 <style>
-/* نیازی به direction LTR نیست */
+.app-bar,
+footer {
+  background-color: #1c1c21 !important;
+}
+</style>
+<style scoped>
+.title {
+  font-size: 24px;
+}
 </style>

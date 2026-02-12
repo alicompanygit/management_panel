@@ -42,9 +42,9 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, computed } from 'vue';
-import { useAuth, type usersListModel } from '~/composables/auth';
+import { computed, onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { useAuth, type usersListModel } from '~/composables/auth';
 
 definePageMeta({
   layout: 'dashboard',

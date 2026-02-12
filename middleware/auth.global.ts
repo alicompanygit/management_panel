@@ -1,35 +1,33 @@
-import { defineNuxtRouteMiddleware } from 'nuxt/app';
+import { defineNuxtRouteMiddleware, navigateTo } from 'nuxt/app';
+import { useAuth } from './../composables/auth';
 
-const publicRoutes = [
-  '/auth/login',
-  '/auth/register',
-];
+const publicRoutes = ['/auth/login', '/auth/register'];
 
 export default defineNuxtRouteMiddleware(async (to) => {
   const { path } = to;
-  
-  // const isPublicPage = publicRoutes.some(publicPath => 
-  //   path === publicPath || path.startsWith(publicPath + '/')
-  // );
-  
-  // if (isPublicPage) {
-  //   return;
-  // }
-  
-  // if (!useAuth.user) {
-  //   try {
-  //     await useAuth.apiGetCurrentUser();
-  //   } catch (error) {
-  //     console.error('Failed to fetch user:', error);
-  //     return navigateTo('/auth/login');
-  //   }
-  // }
-  
-  // if (!useAuth.user) {
-  //   return navigateTo('/auth/login');
-  // }
-  
-  // if (useAuth.user && isPublicPage) {
-  //   return navigateTo('/');
-  // }
+
+  const isPublicPage = publicRoutes.some(
+    (publicPath) => path === publicPath || path.startsWith(publicPath + '/')
+  );
+
+  if (isPublicPage) {
+    return;
+  }
+
+  if (!useAuth.user) {
+    try {
+      await useAuth.apiGetCurrentUser();
+    } catch (error) {
+      console.error('Failed to fetch user:', error);
+      return navigateTo('/auth/login');
+    }
+  }
+
+  if (!useAuth.user) {
+    return navigateTo('/auth/login');
+  }
+
+  if (useAuth.user && isPublicPage) {
+    return navigateTo('/');
+  }
 });
