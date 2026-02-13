@@ -1,7 +1,14 @@
 import { defineNuxtRouteMiddleware, navigateTo } from 'nuxt/app';
 import { useAuth } from './../composables/auth';
 
-const publicRoutes = ['/auth/login', '/auth/register'];
+const publicRoutes = [
+  '/auth/login',
+  '/auth/register',
+  '/',
+  '/product',
+  ,
+  '/product/details',
+];
 
 export default defineNuxtRouteMiddleware(async (to) => {
   const { path } = to;

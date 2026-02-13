@@ -25,9 +25,12 @@
                 <span class="px-1">/</span>
                 <span :class="{ 'opacity-50': locale === 'en' }">fa</span>
               </div>
-              <span v-if="!useAuth.user?.id" class="text-waith ms-4">{{
-                t('Login')
-              }}</span>
+              <span
+                v-if="!useAuth.user?.id"
+                class="text-waith ms-4 cursor-pointer"
+                @click="navigateTo('/auth/login')"
+                >{{ t('Login') }}</span
+              >
             </v-col>
             <v-col cols="6" class="d-flex justify-end align-center">
               <span
