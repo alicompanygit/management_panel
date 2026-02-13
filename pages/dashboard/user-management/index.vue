@@ -54,7 +54,7 @@ const { t } = useI18n();
 
 const loading = ref(false);
 const pageNumber = ref(1);
-const tableHeaders = ref([
+const tableHeaders = computed(() => [
   { title: t('Index'), key: 'index', align: 'start' },
   { title: t('UserName'), key: 'name', align: 'start' },
   { title: t('Email'), key: 'email' },

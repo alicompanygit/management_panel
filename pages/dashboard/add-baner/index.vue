@@ -6,7 +6,7 @@
       class="base-color w-100 px-4 py-3 my-8 rounded-lg font-weight-bold"
       style="color: #ffd933; font-size: 17px"
     >
-      افزودن بنر
+      {{ t('AddBanner') }}
     </div>
   </div>
   <div
@@ -18,7 +18,7 @@
     >
       <v-file-input
         v-model="file"
-        label="انتخاب تصویر"
+        :label="t('SelectImg')"
         accept="image/*"
         prepend-icon="mdi-image"
         show-size
@@ -29,7 +29,7 @@
       <div>
         <base-button
           @click="handleAddBanner()"
-          name="افزودن"
+          name="Add"
           color="#ffd933"
           :disabled="!file || addBannerLoading"
           :loading="addBannerLoading"
@@ -67,7 +67,7 @@
       <template v-slot:is_active="{ item }">
         <div class="d-flex justify-center">
           <v-switch
-            :label="item.is_active ? 'فعال' : 'غیرفعال'"
+            :label="item.is_active ? t('Active') : t('NotActive')"
             :model-value="item.is_active"
             @update:modelValue="(val: any) => handleChangeActiv(item, val)"
             :color="item.is_active ? '#da8989' : '#FFD933'"
@@ -92,12 +92,12 @@ const { t } = useI18n();
 const addBannerLoading = ref(false);
 const file = ref<File | null>(null);
 const loading = ref(false);
-const tableHeaders = ref([
+const tableHeaders = computed(() => [
   { title: t('Index'), key: 'index', align: 'start' },
-  { title: t('شناسه'), key: 'id' },
-  { title: t('تاریخ ایجاد'), key: 'created_at' },
-  { title: t('تصویر'), key: 'image' },
-  { title: t('وضعیت'), key: 'is_active' },
+  { title: t('Id'), key: 'id' },
+  { title: t('CreatedDate'), key: 'created_at' },
+  { title: t('Image'), key: 'image' },
+  { title: t('Status'), key: 'is_active' },
 ]);
 
 const tableData = computed(() => useBanner.bannerData);

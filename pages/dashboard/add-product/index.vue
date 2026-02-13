@@ -6,7 +6,7 @@
       class="base-color w-100 px-4 py-3 my-8 rounded-lg font-weight-bold"
       style="color: #ffd933; font-size: 17px"
     >
-      افزودن محصول
+      {{ t('AddProduct') }}
     </div>
   </div>
 
@@ -28,7 +28,7 @@
               v-if="field.model === 'type'"
               v-model="form[field.model]"
               :label="field.label"
-              placeholder="وارد کنید"
+              placeholder="Enter"
               clearable
               :rules="
                 ['brand_name', 'tire_name', 'product_code', 'type'].includes(
@@ -42,7 +42,7 @@
               v-else
               v-model="form[field.model]"
               :label="field.label"
-              placeholder="وارد کنید"
+              placeholder="Enter"
               clearable
               :rules="
                 ['brand_name', 'tire_name', 'product_code', 'type'].includes(
@@ -55,7 +55,7 @@
           </v-col>
 
           <v-col cols="3">
-            <span class="input-label">کاور</span>
+            <span class="input-label">{{ t('Cover') }}</span>
             <v-file-input
               v-model="form.cover"
               accept="image/*"
@@ -63,13 +63,13 @@
               clearable
               hide-details
               density="compact"
-              label="انتخاب تصویر"
+              :label="t('SelectImg')"
               :rules="[requiredRule]"
             />
           </v-col>
 
           <v-col cols="3" v-for="i in 5" :key="i">
-            <span class="input-label">تصویر {{ i }}</span>
+            <span class="input-label">{{ t('Image') }} {{ i }}</span>
             <v-file-input
               v-model="form.gallery[i - 1]"
               accept="image/*"
@@ -77,20 +77,20 @@
               clearable
               hide-details
               density="compact"
-              label="انتخاب تصویر"
+              :label="t('SelectImg')"
             />
           </v-col>
 
           <v-col cols="3">
             <v-switch
               v-model="form.is_active"
-              :label="form.is_active ? 'فعال' : 'غیرفعال'"
+              :label="form.is_active ? t('Active') : t('NotActive')"
               :color="form.is_active ? '#da8989' : '#FFD933'"
               inset
             />
             <v-switch
               v-model="form.is_new"
-              :label="form.is_new ? 'جدید' : 'عادی'"
+              :label="form.is_new ? t('New') : t('Normal')"
               :color="form.is_new ? '#da8989' : '#FFD933'"
               inset
             />
@@ -99,7 +99,7 @@
           <v-col cols="12" class="d-flex justify-end">
             <base-button
               @click="handleSubmit"
-              name="افزودن"
+              name="Add"
               color="#ffd933"
               class="px-8"
               :loading="loadingAddProduct"
@@ -213,7 +213,7 @@
 
   <base-modal-drawer
     v-model="editDrawer"
-    title="ویرایش محصول"
+    title="EditProduct"
     @close="editDrawer = false"
     class="product-edit-drawer"
   >
@@ -230,7 +230,7 @@
           <v-col cols="6">
             <v-switch
               v-model="editForm.is_active"
-              :label="editForm.is_active ? 'فعال' : 'غیرفعال'"
+              :label="editForm.is_active ? t('Active') : t('NotActive')"
               :color="editForm.is_active ? '#da8989' : '#FFD933'"
             />
           </v-col>
@@ -238,13 +238,13 @@
           <v-col cols="6">
             <v-switch
               v-model="editForm.is_new"
-              :label="editForm.is_new ? 'جدید' : 'عادی'"
+              :label="editForm.is_new ? t('New') : t('Normal')"
               :color="editForm.is_new ? '#da8989' : '#FFD933'"
             />
           </v-col>
 
           <v-col cols="6">
-            <v-file-input v-model="editForm.cover" label="کاور جدید" />
+            <v-file-input v-model="editForm.cover" :label="t('NewCover')" />
           </v-col>
         </v-row>
       </v-form>
@@ -253,7 +253,7 @@
     <template #footer>
       <div class="pa-4 d-flex justify-end">
         <base-button
-          name="تایید"
+          name="Confirm"
           color="#FFD933"
           :loading="editLoading"
           @click="submitEdit"
@@ -293,8 +293,8 @@ const returnDate = (input: string) => {
   return `${hour}:${minute} - ${year}/${day}/${month}`;
 };
 
-const tableHeaders = ref([
-  { title: 'ردیف', key: 'index' },
+const tableHeaders = computed(() => [
+  { title: t('Index'), key: 'index' },
   { title: 'برند', key: 'brand_name' },
   { title: 'نام تایر', key: 'tire_name' },
   { title: 'کد محصول', key: 'product_code' },
