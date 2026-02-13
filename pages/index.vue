@@ -61,13 +61,13 @@
   <div class="w-100 d-flex justify-center align-center mt-4">
     <div class="py-5 px-10 rounded-lg d-flex align-center ga-4">
       <base-button
-        name="Normal"
+        name="AllSizes"
         class="px-6"
         color="#1c1c21"
         textColor="font-weight-bold"
       />
       <base-button
-        name="Forged"
+        name="AllBrands"
         class="px-6"
         color="#1c1c21"
         textColor="font-weight-bold"

@@ -7,11 +7,11 @@
         class="text-secondary2 text-custom w-100 d-flex justify-center"
         style="font-weight: bold"
       >
-        خوش آمدید به پنل مدیریت
+        {{ t('welcomePanelText') }}
       </div>
       <div class="d-flex justify-center ga-1 w-100 mt-3">
         <span class="text-white" v-text="useAuth.user?.name"></span>
-        <span class="text-white">به پنل مدیریت یکپارچه RIMS خوش آمدید</span>
+        <span class="text-white">{{ t('welcomePanelTextRims') }}</span>
       </div>
     </div>
     <div class="w-75 mt-4 d-flex ga-4">
@@ -27,13 +27,15 @@
           <v-icon icon="proicons:box-add" color="#ffd933" size="40" />
         </div>
         <div>
-          <span style="color: #fff; font-weight: bold">محصولات</span>
+          <span style="color: #fff; font-weight: bold">{{
+            t('Products')
+          }}</span>
           <div class="mt-1" style="color: #fff">
-            <span>تعداد:</span>
+            <span>{{ t('Number') }}:</span>
             <span class="ms-1">{{
               useProduct.dashboardData?.stats?.products?.total ?? 0
             }}</span>
-            <span class="ms-5">فعال:</span>
+            <span class="ms-5">{{ t('Active') }}:</span>
             <span class="ms-1">{{
               useProduct.dashboardData?.stats?.products?.active ?? 0
             }}</span>
@@ -56,13 +58,13 @@
           />
         </div>
         <div>
-          <span style="color: #fff; font-weight: bold">بنر ها</span>
+          <span style="color: #fff; font-weight: bold">{{ t('Banners') }}</span>
           <div class="mt-1" style="color: #fff">
-            <span>تعداد:</span>
+            <span>{{ t('Number') }}:</span>
             <span class="ms-1">{{
               useProduct.dashboardData?.stats?.banners?.total ?? 0
             }}</span>
-            <span class="ms-5">فعال:</span>
+            <span class="ms-5">{{ t('Active') }}:</span>
             <span class="ms-1">{{
               useProduct.dashboardData?.stats?.banners?.active ?? 0
             }}</span>
@@ -75,8 +77,11 @@
 
 <script setup lang="ts">
 import { onMounted } from 'vue';
+import { useI18n } from 'vue-i18n';
 import { useAuth } from '~/composables/auth';
 import { useProduct } from '~/composables/product';
+
+const { t } = useI18n();
 
 definePageMeta({
   layout: 'dashboard',
