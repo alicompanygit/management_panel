@@ -1,6 +1,6 @@
 <template>
   //slider
-  <v-carousel cycle interval="3000">
+  <v-carousel cycle interval="3000" class="custom-carousel-page">
     <v-carousel-item
       v-for="item in banners"
       :src="getFullImageUrl(item.image)"
@@ -16,13 +16,17 @@
     color="#FFD933"
     class="border-opacity-100 my-5"
   ></v-divider>
-  <v-sheet class="mx-auto my-8" elevation="8" max-width="800">
+  <v-sheet
+    class="mx-auto my-8 custom-carousel-page"
+    elevation="8"
+    max-width="800"
+  >
     <v-slide-group
       class="pa-4"
-      style="background-color: #030306"
       selected-class="bg-success"
       show-arrows
       id="newproduct"
+      style="background-color: #030306"
     >
       <v-slide-group-item
         v-for="item in useProduct.searchNewProducts.products"
@@ -30,7 +34,7 @@
         v-slot="{ isSelected, toggle, selectedClass }"
       >
         <div
-          class="bg-grey py-3 px-3 rounded-lg cursor-pointer"
+          class="bg-grey py-3 px-3 mx-8 rounded-lg cursor-pointer"
           @click="navigateTo('/auth/login')"
         >
           <img
@@ -131,3 +135,21 @@ onMounted(async () => {
   await useProduct.apiSearchProducts();
 });
 </script>
+
+<style>
+.custom-carousel-page {
+  .v-btn {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.168);
+    color: white;
+    transition: all 0.3s ease;
+  }
+}
+.v-slide-group__next,
+.v-slide-group__prev {
+  svg {
+    color: rgb(255, 255, 255);
+  }
+}
+</style>
