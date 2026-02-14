@@ -60,4 +60,7 @@ export default {
   Products: 'Products',
   Banners: 'Banners',
   Number: 'Number',
+  UnselectAll: 'Unselect All',
+  SelectAll: 'Select All',
+  Export: 'Export',
 };

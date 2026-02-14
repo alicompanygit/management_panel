@@ -52,7 +52,7 @@ export default {
   TireName: 'نام تایر',
   TireSize: 'سایز تایر',
   Gallery: 'گالری',
-  Forged: 'فیک',
+  Forged: 'فورجد',
   AllBrands: 'همه برند ها',
   AllSizes: 'همه سایز ها',
   welcomePanelText: ' خوش آمدید به پنل مدیریت',
@@ -60,4 +60,7 @@ export default {
   Products: 'محصولات',
   Banners: 'بنر ها',
   Number: 'تعداد',
+  UnselectAll: 'لغو همه',
+  SelectAll: 'انتخاب همه',
+  Export: 'خروجی',
 };

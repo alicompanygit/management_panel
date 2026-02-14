@@ -8,7 +8,9 @@
     ></v-carousel-item>
   </v-carousel>
 
-  <h2 class="text-waith text-center mt-16 pt-10">{{ t('NewProduct') }}</h2>
+  <h2 class="text-waith text-center mt-16 pt-10">
+    {{ t('NewProduct') }}
+  </h2>
   <v-divider
     :thickness="2"
     color="#FFD933"
@@ -17,18 +19,37 @@
   <v-sheet class="mx-auto my-8" elevation="8" max-width="800">
     <v-slide-group
       class="pa-4"
+      style="background-color: #030306"
       selected-class="bg-success"
       show-arrows
       id="newproduct"
     >
       <v-slide-group-item
-        v-for="n in 15"
-        :key="n"
+        v-for="item in useProduct.searchNewProducts.products"
+        :key="item"
         v-slot="{ isSelected, toggle, selectedClass }"
       >
-        <v-card :class="['ma-4']" height="200" width="100" @click="toggle">
-          test
-        </v-card>
+        <div
+          class="bg-grey py-3 px-3 rounded-lg cursor-pointer"
+          @click="navigateTo('/auth/login')"
+        >
+          <img
+            v-if="item.images"
+            :src="
+              getFullImageUrl(
+                item.images.filter((item) => item.type === 'cover')[0]?.url
+              )
+            "
+            alt="Banner"
+            width="200"
+            height="200"
+            style="object-fit: cover; border-radius: 10px"
+          />
+          <div
+            v-text="`${item.brand_name} - ${item.tire_name}`"
+            class="text-white"
+          ></div>
+        </div>
       </v-slide-group-item>
     </v-slide-group>
   </v-sheet>
@@ -92,8 +113,8 @@
 <script setup lang="ts">
 import { computed, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { useBanner } from '~/composables/banner';
 import { useProduct } from '~/composables/Product';
+import { useBanner } from '~/composables/banner';
 
 const { t } = useI18n();
 

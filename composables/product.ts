@@ -60,26 +60,24 @@ type TSearchProductModel = {
 type TSearchNewProduct = {
   status: string;
   count: number;
-  products: [
-    {
-      id: number;
-      brand_name: string;
-      tire_name: string;
-      product_code: string;
-      tire_size: string;
-      width: string;
-      color: string;
-      quality: string;
-      bolt: string;
-      cb: string;
-      type: string;
-      cover: string;
-      images: [{ url: string; type: string }, { url: string; type: string }];
-      is_active: boolean;
-      is_new: boolean;
-      created_at: string;
-    },
-  ];
+  products: {
+    id: number;
+    brand_name: string;
+    tire_name: string;
+    product_code: string;
+    tire_size: string;
+    width: string;
+    color: string;
+    quality: string;
+    bolt: string;
+    cb: string;
+    type: string;
+    cover: string;
+    images: { url: string; type: string }[];
+    is_active: boolean;
+    is_new: boolean;
+    created_at: string;
+  }[];
 };
 
 export class Product {
@@ -87,6 +85,8 @@ export class Product {
   dashboardData = {};
   searchedProductData: TSearchProductModel = {};
   searchNewProducts: TSearchNewProduct = {};
+
+  productSummery = {};
 
   private get config() {
     return useRuntimeConfig();
@@ -240,11 +240,13 @@ export class Product {
 
   async apiGetProductsSummary() {
     try {
-      return await this.fetchWithAuth<IApiResponse<IProductSummary>>(
+      const res = await this.fetchWithAuth<IApiResponse<IProductSummary>>(
         `${this.config.public.baseUrl}/get_products_summary`,
         { method: 'GET' },
         true
       );
+
+      if (res) this.productSummery = res;
     } catch (error) {
       console.error('apiGetProductsSummary error:', error);
       return false;
