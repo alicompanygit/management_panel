@@ -60,6 +60,7 @@
 import { computed, onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useProduct } from '~/composables/Product';
+import { useBanner } from '~/composables/banner';
 
 const { t } = useI18n();
 
@@ -90,11 +91,9 @@ const exportToWhatsApp = () => {
   window.open(url, '_blank');
 };
 
-const config = useRuntimeConfig();
-
 const getFullImageUrl = (path: string) => {
   if (!path) return '';
-  return config.public.baseUrl.replace('/api', '') + path;
+  return `${useBanner.config.public.baseUrl}${path}`;
 };
 
 onMounted(async () => {

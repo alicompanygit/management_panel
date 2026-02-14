@@ -35,7 +35,7 @@
       >
         <div
           class="bg-grey py-3 px-3 mx-8 rounded-lg cursor-pointer"
-          @click="navigateTo('/auth/login')"
+          @click="navigateTo('/product')"
         >
           <img
             v-if="item.images"
@@ -106,9 +106,26 @@
     </div>
   </div>
   <div class="w-100 d-flex justify-center align-center mt-4">
-    <div class="w-75 bg-grey py-5 px-5 rounded-lg">
+    <div
+      class="w-75 py-5 px-5 rounded-lg"
+      style="max-height: 500px; overflow: scroll"
+    >
       <v-row>
-        <v-col cols="6" class="border-lg border-error"></v-col>
+        <v-col v-for="product in products" :key="product.id" cols="12" sm="6">
+          <v-card
+            elevation="2"
+            class="pa-2 text-center bg-grey d-flex justify-end align-center px-5 py-4 cursor-pointer"
+            @click="navigateTo('/product')"
+          >
+            <div
+              class="text-white mx-2 mt-1"
+              style="font-size: 14px !important"
+            >
+              {{ product.brand_name + ' - ' + product.tire_name }}
+            </div>
+            <v-icon icon="solar:folder-linear" color="#FFD933" size="35px" />
+          </v-card>
+        </v-col>
       </v-row>
     </div>
   </div>
@@ -123,6 +140,7 @@ import { useBanner } from '~/composables/banner';
 const { t } = useI18n();
 
 const banners = computed(() => useBanner.bannerData?.banners ?? []);
+const products = computed(() => useProduct.productSummery?.products || []);
 
 const getFullImageUrl = (path: string) => {
   if (!path) return '';
@@ -132,7 +150,7 @@ const getFullImageUrl = (path: string) => {
 onMounted(async () => {
   await useBanner.apiGetBanners();
   await useProduct.apiSearchProductsNew();
-  await useProduct.apiSearchProducts();
+  await useProduct.apiGetProductsSummary();
 });
 </script>
 
