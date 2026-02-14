@@ -93,6 +93,7 @@
 import { computed, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useBanner } from '~/composables/banner';
+import { useProduct } from '~/composables/Product';
 
 const { t } = useI18n();
 
@@ -105,5 +106,7 @@ const getFullImageUrl = (path: string) => {
 
 onMounted(async () => {
   await useBanner.apiGetBanners();
+  await useProduct.apiSearchProductsNew();
+  await useProduct.apiSearchProducts();
 });
 </script>
