@@ -7,9 +7,22 @@ export default defineNuxtConfig({
   ssr: false,
   runtimeConfig: {
     public: {
-      baseUrl: process.env.NUXT_PUBLIC_BASE_URL
-    }
-  },  
+      baseUrl: process.env.NUXT_PUBLIC_BASE_URL,
+    },
+  },
+
+  pwa: {
+    registerType: 'autoUpdate',
+    manifest: {
+      name: 'App Name',
+      short_name: 'App',
+      start_url: '/',
+      display: 'standalone',
+      theme_color: '#ffffff',
+      background_color: '#ffffff',
+      icons: [],
+    },
+  },
 
   alias: {
     // '~': `${process.env.NGINX_PATH}`,
@@ -114,6 +127,7 @@ export default defineNuxtConfig({
 
   //build: { transpile: ["vuetify"] },
   modules: [
+    '@vite-pwa/nuxt',
     '@pinia/nuxt',
     '@pinia-plugin-persistedstate/nuxt',
     async (options, nuxt) => {
@@ -144,6 +158,8 @@ export default defineNuxtConfig({
           type: 'image/x-icon',
           href: `${process.env.NGINX_PATH}images/logos/${process.env.VITE_COMPANY_LOGO}/logo.png`,
         },
+        { rel: 'manifest', href: '/manifest.webmanifest' },
+        { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
       ],
       style: [
         {
