@@ -36,9 +36,57 @@ interface IApiResponse<T = any> {
   brands?: string[];
 }
 
+type TSearchProductModel = {
+  status: string;
+  page: number;
+  per_page: number;
+  total_items: number;
+  total_pages: number;
+  products: [
+    {
+      id: number;
+      brand_name: string;
+      tire_name: string;
+      product_code: string;
+      tire_size: number;
+      color: string;
+      type: string;
+      is_active: boolean;
+      is_new: boolean;
+    },
+  ];
+};
+
+type TSearchNewProduct = {
+  status: string;
+  count: number;
+  products: [
+    {
+      id: number;
+      brand_name: string;
+      tire_name: string;
+      product_code: string;
+      tire_size: string;
+      width: string;
+      color: string;
+      quality: string;
+      bolt: string;
+      cb: string;
+      type: string;
+      cover: string;
+      images: [{ url: string; type: string }, { url: string; type: string }];
+      is_active: boolean;
+      is_new: boolean;
+      created_at: string;
+    },
+  ];
+};
+
 export class Product {
   fullProductData = {};
   dashboardData = {};
+  searchedProductData: TSearchProductModel = {};
+  searchNewProducts: TSearchNewProduct = {};
 
   private get config() {
     return useRuntimeConfig();
@@ -270,6 +318,59 @@ export class Product {
       );
     } catch (error) {
       console.error('apiChangeNew error:', error);
+      return false;
+    }
+  }
+
+  async apiSearchProducts(data: {
+    brand_name?: string;
+    tire_name?: string;
+    product_code?: string;
+    tire_size?: string;
+    color?: string;
+    type?: string;
+    page: number;
+    per_page: number;
+  }) {
+    try {
+      const filtered = Object.fromEntries(
+        Object.entries(data).filter(
+          ([_, v]) => v !== undefined && v !== null && v !== ''
+        )
+      );
+
+      const res = await this.fetchWithAuth<TSearchProductModel>(
+        `${this.config.public.baseUrl}/search_products`,
+        {
+          method: 'POST',
+          body: JSON.stringify(filtered),
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        },
+        true
+      );
+
+      if (res && res.status) this.searchedProductData = res;
+      else this.searchedProductData = {};
+    } catch (error) {
+      console.error('apiSearchProducts error:', error);
+      return false;
+    }
+  }
+
+  async apiSearchProductsNew() {
+    try {
+      const res = await this.fetchWithAuth<IApiResponse<TSearchNewProduct>>(
+        `${this.config.public.baseUrl}/get_new_products_full`,
+        { method: 'GET' },
+        true
+      );
+
+      if (res && res.status) this.searchNewProducts = res;
+      else this.searchNewProducts = {};
+    } catch (error) {
+      console.error('apiSearchProducts error:', error);
       return false;
     }
   }
