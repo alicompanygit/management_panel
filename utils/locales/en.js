@@ -63,4 +63,7 @@ export default {
   UnselectAll: 'Unselect All',
   SelectAll: 'Select All',
   Export: 'Export',
+  SearchInCode: 'search in product code',
+  NextPage: 'Next Page',
+  previouspage: 'previous page',
 };

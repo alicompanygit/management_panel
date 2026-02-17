@@ -7,27 +7,33 @@
           @click="toggleSelectAll"
           :name="allSelected ? t('UnselectAll') : t('SelectAll')"
           color="#FFD933"
+          :icon="
+            allSelected
+              ? 'fluent:select-all-on-16-filled'
+              : 'fluent:select-all-on-16-regular'
+          "
         />
       </v-col>
 
       <v-col>
-        <v-btn
+        <base-button
+          icon="circum:export"
           @click="exportToWhatsApp"
           color="#FFD933"
           :disabled="!selectedIds.length"
-        >
-          {{ t('Export') }}
-        </v-btn>
+          name="Export"
+        />
       </v-col>
     </v-row>
 
-    <!-- Products Grid -->
     <v-row>
       <v-col v-for="product in products" :key="product.id" cols="6" sm="4">
         <v-card
           elevation="2"
           class="pa-2 text-center bg-grey"
-          :class="{ 'bg-grey-lighten-4': selectedIds.includes(product.id) }"
+          :class="{
+            'border-lg border-primary': selectedIds.includes(product.id),
+          }"
         >
           <v-img
             :src="getFullImageUrl(product.cover)"
@@ -53,22 +59,48 @@
         </v-card>
       </v-col>
     </v-row>
+    <div class="w-100 d-flex justify-center align-center my-10">
+      <div class="w-50 d-flex justify-space-between align-center">
+        <base-button
+          name="NextPage"
+          color="#FFD933"
+          @click="nextPage"
+          :disabled="useProduct.foldersProduct?.count ?? 0 / 10 >= page"
+          icon="fluent:arrow-right-20-regular"
+          iconSize="16px"
+        />
+        <base-button
+          name="previouspage"
+          color="#FFD933"
+          @click="previousPage"
+          :disabled="page <= 1"
+          icon="fluent:arrow-left-28-filled"
+          iconLocation="left"
+          iconSize="15px"
+        />
+      </div>
+    </div>
   </v-container>
 </template>
 
 <script setup lang="ts">
+import { useRoute, useRouter } from '#imports';
 import { computed, onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useProduct } from '~/composables/Product';
 import { useBanner } from '~/composables/banner';
 
 const { t } = useI18n();
+const route = useRoute();
+const router = useRouter();
+
+const page = ref(1);
 
 const phone = '989XXXXXXXXX';
 
 const selectedIds = ref<number[]>([]);
 
-const products = computed(() => useProduct.productSummery?.products || []);
+const products = computed(() => useProduct.foldersProduct?.products ?? []);
 
 const allSelected = computed(
   () =>
@@ -96,7 +128,41 @@ const getFullImageUrl = (path: string) => {
   return `${useBanner.config.public.baseUrl}${path}`;
 };
 
+const nextPage = async () => {
+  if (!route?.query?.brand_name || !route?.query?.tire_name) return;
+
+  page.value++;
+  await useProduct.apiGetFolderProduct({
+    page: page.value,
+    per_page: 10,
+    brand_name: route?.query?.brand_name,
+    tire_name: route?.query?.tire_name,
+  });
+};
+
+const previousPage = async () => {
+  if (!route?.query?.brand_name || !route?.query?.tire_name || page.value <= 1)
+    return;
+
+  page.value--;
+  await useProduct.apiGetFolderProduct({
+    page: page.value,
+    per_page: 10,
+    brand_name: route?.query?.brand_name,
+    tire_name: route?.query?.tire_name,
+  });
+};
+
 onMounted(async () => {
-  await useProduct.apiGetProductsSummary();
+  useProduct.foldersProduct = {};
+
+  if (!route?.query?.brand_name || !route?.query?.tire_name) return;
+
+  await useProduct.apiGetFolderProduct({
+    page: page.value,
+    per_page: 10,
+    brand_name: route?.query?.brand_name,
+    tire_name: route?.query?.tire_name,
+  });
 });
 </script>

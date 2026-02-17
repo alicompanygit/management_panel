@@ -64,7 +64,7 @@
   ></v-divider>
 
   //product
-  <div class="w-100 d-flex justify-center mt-10">
+  <!-- <div class="w-100 d-flex justify-center mt-10">
     <div
       style="background-color: #1c1c21"
       class="py-5 px-10 rounded-lg d-flex ga-4"
@@ -82,25 +82,14 @@
         textColor="text-waith font-weight-bold"
       />
     </div>
-  </div>
+  </div> -->
   <div class="w-100 d-flex justify-center align-center mt-4">
     <div class="py-5 px-10 rounded-lg d-flex align-center ga-4">
-      <base-button
-        name="AllSizes"
-        class="px-6"
-        color="#1c1c21"
-        textColor="font-weight-bold"
-      />
-      <base-button
-        name="AllBrands"
-        class="px-6"
-        color="#1c1c21"
-        textColor="font-weight-bold"
-      />
       <div style="width: 250px">
         <base-form-text-field
+          v-model="folderSearch"
           customClass="bg-grey rounded-lg text-waith"
-          placeholder="DoSearch"
+          placeholder="SearchInCode"
         />
       </div>
     </div>
@@ -115,7 +104,11 @@
           <v-card
             elevation="2"
             class="pa-2 text-center bg-grey d-flex justify-end align-center px-5 py-4 cursor-pointer"
-            @click="navigateTo('/product')"
+            @click="
+              navigateTo(
+                `/product?brand_name=${product.brand_name}&tire_name=${product.tire_name}`
+              )
+            "
           >
             <div
               class="text-white mx-2 mt-1"
@@ -132,25 +125,37 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted } from 'vue';
+import { navigateTo } from 'nuxt/app';
+import { computed, onMounted, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useProduct } from '~/composables/Product';
 import { useBanner } from '~/composables/banner';
 
 const { t } = useI18n();
 
+const folderSearch = ref(null);
+
 const banners = computed(() => useBanner.bannerData?.banners ?? []);
-const products = computed(() => useProduct.productSummery?.products || []);
+const products = computed(() => useProduct.folders?.items ?? []);
 
 const getFullImageUrl = (path: string) => {
   if (!path) return '';
   return `${useBanner.config.public.baseUrl}${path}`;
 };
 
+watch(
+  () => folderSearch.value,
+  async () => {
+    await useProduct.apiGetFolders({
+      product_code: folderSearch.value ?? null,
+    });
+  }
+);
+
 onMounted(async () => {
   await useBanner.apiGetBanners();
   await useProduct.apiSearchProductsNew();
-  await useProduct.apiGetProductsSummary();
+  await useProduct.apiGetFolders({ product_code: folderSearch.value ?? null });
 });
 </script>
 

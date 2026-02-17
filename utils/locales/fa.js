@@ -63,4 +63,7 @@ export default {
   UnselectAll: 'لغو همه',
   SelectAll: 'انتخاب همه',
   Export: 'خروجی',
+  SearchInCode: 'جستجو با کد محصول',
+  NextPage: 'صفحه بعد',
+  previouspage: 'صفحه قبل',
 };

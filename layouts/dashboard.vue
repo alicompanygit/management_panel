@@ -9,25 +9,47 @@
                 v-if="useAuth.user?.is_god || useAuth.user?.is_super_user"
                 name="Dashboard"
                 variant="outlined"
-                density="comfortable"
                 color="#ffd933"
                 @click="navigateTo('/dashboard')"
               />
               <div
                 @click="toggleLang"
                 :class="[
-                  'rounded-sm d-flex text-secondary2 py-0 ms-4 cursor-pointer',
+                  'rounded-sm d-flex text-secondary2 py-0 ms-7 cursor-pointer px-2 align-center',
                   locale === 'en' ? 'px-2' : 'px-1',
                 ]"
                 style="border: 1px solid #ffd933; height: max-content"
               >
-                <span :class="{ 'opacity-50': locale === 'fa' }">en</span>
-                <span class="px-1">/</span>
-                <span :class="{ 'opacity-50': locale === 'en' }">fa</span>
+                <span
+                  :class="[
+                    'px-1 my-1',
+                    {
+                      'opacity-50': locale === 'fa',
+                    },
+                    {
+                      'text-white bg-secondary3 rounded-sm': locale === 'en',
+                    },
+                  ]"
+                  >en</span
+                >
+                <span class="px-2">/</span>
+                <div
+                  :class="[
+                    'px-2 my-1',
+                    {
+                      'opacity-50 text-white': locale === 'en',
+                    },
+                    {
+                      'text-white bg-secondary3 rounded-sm': locale === 'fa',
+                    },
+                  ]"
+                >
+                  fa
+                </div>
               </div>
               <span
                 v-if="!useAuth.user?.id"
-                class="text-waith ms-4 cursor-pointer"
+                class="text-waith ms-7 cursor-pointer"
                 @click="navigateTo('/auth/login')"
                 >{{ t('Login') }}</span
               >

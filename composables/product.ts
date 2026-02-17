@@ -85,6 +85,8 @@ export class Product {
   dashboardData = {};
   searchedProductData: TSearchProductModel = {};
   searchNewProducts: TSearchNewProduct = {};
+  folders = {};
+  foldersProduct = {};
 
   productSummery = {};
 
@@ -374,6 +376,37 @@ export class Product {
     } catch (error) {
       console.error('apiSearchProducts error:', error);
       return false;
+    }
+  }
+
+  async apiGetFolders(data?: any) {
+    try {
+      const res = await this.fetchWithAuth<IApiResponse<TSearchNewProduct>>(
+        `${this.config.public.baseUrl}/get_brand_tire_tree`,
+        { method: 'POST', body: { ...data } },
+        true
+      );
+
+      if (res && res.status === 'success') this.folders = res;
+      else this.folders = {};
+    } catch (error) {
+      console.error('apiGetFolders error:', error);
+      this.folders = {};
+    }
+  }
+  async apiGetFolderProduct(data?: any) {
+    try {
+      const res = await this.fetchWithAuth<IApiResponse<TSearchNewProduct>>(
+        `${this.config.public.baseUrl}/get_products_by_brand_and_tire`,
+        { method: 'POST', body: { ...data } },
+        true
+      );
+
+      if (res && res.status === 'success') this.foldersProduct = res;
+      else this.foldersProduct = {};
+    } catch (error) {
+      console.error('apiGetFolderProduct error:', error);
+      this.foldersProduct = {};
     }
   }
 }
