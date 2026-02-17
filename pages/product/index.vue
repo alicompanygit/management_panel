@@ -84,7 +84,7 @@
 </template>
 
 <script setup lang="ts">
-import { useRoute, useRouter } from '#imports';
+import { nextTick, useRoute, useRouter } from '#imports';
 import { computed, onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useProduct } from '~/composables/Product';
@@ -99,6 +99,11 @@ const page = ref(1);
 const phone = '989XXXXXXXXX';
 
 const selectedIds = ref<number[]>([]);
+
+const path = computed(() => ({
+  brand_name: route?.query?.brand_name,
+  tire_name: route?.query?.tire_name,
+}));
 
 const products = computed(() => useProduct.foldersProduct?.products ?? []);
 
@@ -155,14 +160,20 @@ const previousPage = async () => {
 
 onMounted(async () => {
   useProduct.foldersProduct = {};
+  await nextTick();
 
-  if (!route?.query?.brand_name || !route?.query?.tire_name) return;
+  if (!route?.query?.brand_name || !route?.query?.tire_name) {
+    console.error('error in onMounted apiGetFolderProduct');
+    return;
+  }
 
-  await useProduct.apiGetFolderProduct({
-    page: page.value,
-    per_page: 10,
-    brand_name: route?.query?.brand_name,
-    tire_name: route?.query?.tire_name,
-  });
+  setTimeout(() => {
+    useProduct.apiGetFolderProduct({
+      page: page.value,
+      per_page: 10,
+      brand_name: route?.query?.brand_name,
+      tire_name: route?.query?.tire_name,
+    });
+  }, 500);
 });
 </script>

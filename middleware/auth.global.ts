@@ -13,13 +13,14 @@ export default defineNuxtRouteMiddleware(async (to) => {
   const { path } = to;
   const auth = useAuth;
 
-  // بررسی مسیر عمومی
   const isPublicPage = publicRoutes.some(
     (publicPath) => path === publicPath || path.startsWith(publicPath + '/')
   );
-  if (isPublicPage) return;
+  if (isPublicPage) {
+    if (!auth.user) await auth.apiGetCurrentUser();
+    return;
+  }
 
-  // اگر کاربر لاگین نیست، تلاش کن از API اطلاعات بگیری
   if (!auth.user) {
     try {
       await auth.apiGetCurrentUser();
@@ -29,6 +30,5 @@ export default defineNuxtRouteMiddleware(async (to) => {
     }
   }
 
-  // بعد از fetch، اگر هنوز user null بود → ریدایرکت
   if (!auth.user) return navigateTo('/auth/login');
 });
