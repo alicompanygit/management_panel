@@ -1,4 +1,6 @@
-<template></template>
+<template>
+  <div class="text-white">{{ useProduct.detail }}</div>
+</template>
 
 <script setup lang="ts">
 import { useRoute } from '#imports';

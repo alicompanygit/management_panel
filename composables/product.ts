@@ -87,6 +87,7 @@ export class Product {
   searchNewProducts: TSearchNewProduct = {};
   folders = {};
   foldersProduct = {};
+  detail = {};
 
   productSummery = {};
 
@@ -276,13 +277,17 @@ export class Product {
 
   async apiGetProductDetail(productId: number) {
     try {
-      return await this.fetchWithAuth<IApiResponse<IProductFull>>(
+      const res = await this.fetchWithAuth<IApiResponse<IProductFull>>(
         `${this.config.public.baseUrl}/get_product_detail/${productId}`,
         { method: 'GET' },
         true
       );
+      if (res && res.status === 'success') {
+        this.detail = res;
+      } else this.detail = {};
     } catch (error) {
       console.error('apiGetProductDetail error:', error);
+      this.detail = {};
       return false;
     }
   }

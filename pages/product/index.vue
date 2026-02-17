@@ -46,6 +46,7 @@
           <div
             class="text-caption mb-1 text-white"
             style="font-size: 14px !important"
+            @click="navigateTo(`/product/${product.product_code}`)"
           >
             ID: {{ product.product_code }}
           </div>
@@ -84,7 +85,8 @@
 </template>
 
 <script setup lang="ts">
-import { nextTick, useRoute, useRouter } from '#imports';
+import { useRoute, useRouter } from '#imports';
+import { navigateTo } from 'nuxt/app';
 import { computed, onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useProduct } from '~/composables/Product';
@@ -134,46 +136,46 @@ const getFullImageUrl = (path: string) => {
 };
 
 const nextPage = async () => {
-  if (!route?.query?.brand_name || !route?.query?.tire_name) return;
+  const dataStr = localStorage.getItem('productData');
+  const productData = dataStr ? JSON.parse(dataStr) : null;
+
+  if (!productData.brand_name || !productData.tire_name) return;
 
   page.value++;
   await useProduct.apiGetFolderProduct({
     page: page.value,
     per_page: 10,
-    brand_name: route?.query?.brand_name,
-    tire_name: route?.query?.tire_name,
+    brand_name: productData.brand_name,
+    tire_name: productData.tire_name,
   });
 };
 
 const previousPage = async () => {
-  if (!route?.query?.brand_name || !route?.query?.tire_name || page.value <= 1)
-    return;
+  const dataStr = localStorage.getItem('productData');
+  const productData = dataStr ? JSON.parse(dataStr) : null;
+
+  if (!productData.brand_name || !productData.tire_name) return;
 
   page.value--;
   await useProduct.apiGetFolderProduct({
     page: page.value,
     per_page: 10,
-    brand_name: route?.query?.brand_name,
-    tire_name: route?.query?.tire_name,
+    brand_name: productData.brand_name,
+    tire_name: productData.tire_name,
   });
 };
 
 onMounted(async () => {
-  useProduct.foldersProduct = {};
-  await nextTick();
+  const dataStr = localStorage.getItem('productData');
+  const productData = dataStr ? JSON.parse(dataStr) : null;
 
-  if (!route?.query?.brand_name || !route?.query?.tire_name) {
-    console.error('error in onMounted apiGetFolderProduct');
-    return;
-  }
+  if (!productData.brand_name || !productData.tire_name) return;
 
-  setTimeout(() => {
-    useProduct.apiGetFolderProduct({
-      page: page.value,
-      per_page: 10,
-      brand_name: route?.query?.brand_name,
-      tire_name: route?.query?.tire_name,
-    });
-  }, 500);
+  await useProduct.apiGetFolderProduct({
+    page: page.value,
+    per_page: 10,
+    brand_name: productData.brand_name,
+    tire_name: productData.tire_name,
+  });
 });
 </script>

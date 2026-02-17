@@ -104,11 +104,7 @@
           <v-card
             elevation="2"
             class="pa-2 text-center bg-grey d-flex justify-end align-center px-5 py-4 cursor-pointer"
-            @click="
-              navigateTo(
-                `/product?brand_name=${product.brand_name}&tire_name=${product.tire_name}`
-              )
-            "
+            @click="handleGoProduct(product.brand_name, product.tire_name)"
           >
             <div
               class="text-white mx-2 mt-1"
@@ -126,7 +122,7 @@
 
 <script setup lang="ts">
 import { navigateTo } from 'nuxt/app';
-import { computed, onMounted, ref, watch } from 'vue';
+import { computed, nextTick, onMounted, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useProduct } from '~/composables/Product';
 import { useBanner } from '~/composables/banner';
@@ -141,6 +137,15 @@ const products = computed(() => useProduct.folders?.items ?? []);
 const getFullImageUrl = (path: string) => {
   if (!path) return '';
   return `${useBanner.config.public.baseUrl}${path}`;
+};
+
+const handleGoProduct = async (b: string, t: string) => {
+  localStorage.setItem(
+    'productData',
+    JSON.stringify({ brand_name: b, tire_name: t })
+  );
+  await nextTick();
+  navigateTo('/product');
 };
 
 watch(
