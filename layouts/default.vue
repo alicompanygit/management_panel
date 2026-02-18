@@ -76,9 +76,19 @@
         <router-view />
       </v-container>
       <v-footer app>
-        <span>© 2024</span>
+        <div class="w-100 d-flex justify-center text-white py-2">
+          Address Al Mamoun Tyres Trading CO LLC Sharhah - industrial 8 - WH:C6
+        </div>
       </v-footer>
     </v-main>
+    <a :href="whatsappLink" target="_blank" class="whatsapp-float">
+      <div
+        style="background-color: #25d366; border-radius: 999px"
+        class="px-2 py-2"
+      >
+        <v-icon icon="fa7-brands:whatsapp" size="40px" />
+      </div>
+    </a>
   </v-app>
 </template>
 
@@ -93,6 +103,12 @@ theme.global.name.value = 'light';
 
 const { t, locale } = useI18n({ useScope: 'global' });
 const rtl = useRtl();
+
+const phoneNumber = '971566794959';
+
+const whatsappLink = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(
+  'Hello!'
+)}`;
 
 const toggleLang = () => {
   locale.value = locale.value === 'en' ? 'fa' : 'en';
@@ -109,5 +125,12 @@ footer {
 <style scoped>
 .title {
   font-size: 24px;
+}
+
+.whatsapp-float {
+  position: fixed;
+  bottom: 80px; /* بالاتر از ارتفاع فوتر */
+  right: 30px;
+  z-index: 2000;
 }
 </style>
