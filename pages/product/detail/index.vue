@@ -79,7 +79,7 @@
             name="Whatsapp"
             icon="fa7-brands:whatsapp"
             color="#25D366"
-            @click="() => window.open(whatsappLink(), '_blank')"
+            @click="openWhatsapp"
           />
         </v-col>
       </v-row>
@@ -107,6 +107,10 @@ const whatsappLink = () => {
     `Code: ${product.value?.product_code ?? '-'}`;
 
   return `https://wa.me/${phoneNumber}?text=${encodeURIComponent(text)}`;
+};
+
+const openWhatsapp = () => {
+  window.open(whatsappLink(), '_blank');
 };
 
 const getFullImageUrl = (path: string) => {
