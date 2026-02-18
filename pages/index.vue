@@ -35,7 +35,7 @@
       >
         <div
           class="bg-grey py-3 px-3 mx-8 rounded-lg cursor-pointer"
-          @click="navigateTo('/product')"
+          @click="handleGoDetile(item.id)"
         >
           <img
             v-if="item.images"
@@ -45,13 +45,13 @@
               )
             "
             alt="Banner"
-            width="200"
-            height="200"
+            width="250"
+            height="250"
             style="object-fit: cover; border-radius: 10px"
           />
           <div
-            v-text="`${item.brand_name} - ${item.tire_name}`"
-            class="text-white"
+            v-text="`${item.brand_name ?? ''} - ${item.tire_name ?? ''}`"
+            class="text-white pt-3"
           ></div>
         </div>
       </v-slide-group-item>
@@ -146,6 +146,14 @@ const handleGoProduct = async (b: string, t: string) => {
   );
   await nextTick();
   navigateTo('/product');
+};
+
+const handleGoDetile = async (id: any) => {
+  if (!id) return;
+
+  localStorage.setItem('productDetail', id);
+  await nextTick();
+  navigateTo(`/product/detail`);
 };
 
 watch(
