@@ -46,7 +46,7 @@
 
           <div
             class="mt-6 text-white text-secondary2 cursor-pointer"
-            style="font-size: 20px !important"
+            style="font-size: 18px !important"
             @click="handleGoDetile(product.id)"
           >
             ID: {{ product.product_code }}

@@ -63,7 +63,7 @@ export default {
   UnselectAll: 'لغو همه',
   SelectAll: 'انتخاب همه',
   Export: 'خروجی',
-  SearchInCode: 'جستجو با کد محصول',
+  SearchInCode: ' جستجو کنید!',
   NextPage: 'صفحه بعد',
   previouspage: 'صفحه قبل',
   CB: 'CB',

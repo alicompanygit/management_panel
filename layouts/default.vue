@@ -15,10 +15,14 @@
               <div
                 @click="toggleLang"
                 :class="[
-                  'rounded-sm d-flex text-secondary2 py-0 ms-7 cursor-pointer px-2 align-center',
+                  ' d-flex text-secondary2 py-0 ms-7 cursor-pointer px-2 align-center',
                   locale === 'en' ? 'px-2' : 'px-1',
                 ]"
-                style="border: 1px solid #ffd933; height: max-content"
+                style="
+                  border: 1px solid #ffd933;
+                  height: max-content;
+                  border-radius: 6px;
+                "
               >
                 <span
                   :class="[
@@ -30,7 +34,7 @@
                       'text-white bg-secondary3 rounded-sm': locale === 'en',
                     },
                   ]"
-                  >en</span
+                  >EN</span
                 >
                 <span class="px-2">/</span>
                 <div
@@ -44,7 +48,7 @@
                     },
                   ]"
                 >
-                  fa
+                  FA
                 </div>
               </div>
               <span

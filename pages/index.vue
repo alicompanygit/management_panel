@@ -168,7 +168,7 @@ watch(
 onMounted(async () => {
   await useBanner.apiGetBanners();
   await useProduct.apiSearchProductsNew();
-  await useProduct.apiGetFolders({ product_code: folderSearch.value ?? null });
+  await useProduct.apiGetFolders({ brand_name: folderSearch.value ?? null });
 });
 </script>
 
