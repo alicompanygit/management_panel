@@ -96,7 +96,7 @@ import { useBanner } from '~/composables/banner';
 const { t } = useI18n();
 
 const selectedImage = ref<string>('');
-const phoneNumber = '989123456789';
+const phoneNumber = '971566794959';
 
 const product = computed(() => useProduct.detail?.product ?? {});
 
