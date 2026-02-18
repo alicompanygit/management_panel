@@ -29,6 +29,6 @@
 
 <script setup>
 definePageMeta({
-  layout: 'blank',
+  layout: 'login',
 });
 </script>

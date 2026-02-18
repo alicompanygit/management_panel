@@ -40,12 +40,13 @@
             max-height="350"
             aspect-ratio="1"
             cover
-            class="mb-2 rounded-lg"
+            class="mb-2 rounded-lg cursor-pointer"
+            @click="handleGoDetile(product.id)"
           />
 
           <div
-            class="text-caption mb-1 text-white"
-            style="font-size: 14px !important"
+            class="mt-6 text-white text-secondary2 cursor-pointer"
+            style="font-size: 20px !important"
             @click="handleGoDetile(product.id)"
           >
             ID: {{ product.product_code }}
