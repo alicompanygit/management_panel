@@ -66,4 +66,5 @@ export default {
   SearchInCode: 'جستجو با کد محصول',
   NextPage: 'صفحه بعد',
   previouspage: 'صفحه قبل',
+  CB: 'CB',
 };

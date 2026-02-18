@@ -46,7 +46,7 @@
           <div
             class="text-caption mb-1 text-white"
             style="font-size: 14px !important"
-            @click="navigateTo(`/product/${product.product_code}`)"
+            @click="handleGoDetile(product.id)"
           >
             ID: {{ product.product_code }}
           </div>
@@ -87,7 +87,7 @@
 <script setup lang="ts">
 import { useRoute, useRouter } from '#imports';
 import { navigateTo } from 'nuxt/app';
-import { computed, onMounted, ref } from 'vue';
+import { computed, nextTick, onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useProduct } from '~/composables/Product';
 import { useBanner } from '~/composables/banner';
@@ -163,6 +163,14 @@ const previousPage = async () => {
     brand_name: productData.brand_name,
     tire_name: productData.tire_name,
   });
+};
+
+const handleGoDetile = async (id) => {
+  if (!id) return;
+
+  localStorage.setItem('productDetail', id);
+  await nextTick();
+  navigateTo(`/product/detail`);
 };
 
 onMounted(async () => {

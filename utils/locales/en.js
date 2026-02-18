@@ -66,4 +66,5 @@ export default {
   SearchInCode: 'search in product code',
   NextPage: 'Next Page',
   previouspage: 'previous page',
+  CB: 'CB',
 };
