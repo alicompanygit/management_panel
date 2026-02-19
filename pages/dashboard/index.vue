@@ -11,14 +11,8 @@
 
             <!-- فقط متن welcome معکوس شود -->
             <div class="d-flex justify-center align-center mt-3">
-              <span
-                class="text-white"
-                :class="locale === 'fa' ? 'me-1' : 'ms-1'"
-              >
-                {{ useAuth.user?.name }}
-              </span>
               <span class="text-white">
-                {{ t('welcomePanelTextRims') }}
+                {{ useAuth.user?.name + ' ' + t('welcomePanelTextRims') }}
               </span>
             </div>
           </div>

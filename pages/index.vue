@@ -50,6 +50,7 @@
             "
             alt="Banner"
             height="250"
+            width="250"
             style="object-fit: cover; border-radius: 10px"
           />
           <div

@@ -19,7 +19,7 @@
     >
       <v-form ref="formRef">
         <v-row>
-          <v-col cols="3" v-for="field in textFields" :key="field.model">
+          <v-col lg="3" cols="6" v-for="field in textFields" :key="field.model">
             <base-form-select
               :items="[
                 { title: 'Normal', value: 'normal' },
@@ -54,7 +54,7 @@
             />
           </v-col>
 
-          <v-col cols="3">
+          <v-col lg="3" cols="6">
             <span class="input-label">{{ t('Cover') }}</span>
             <v-file-input
               v-model="form.cover"
@@ -68,7 +68,7 @@
             />
           </v-col>
 
-          <v-col cols="3" v-for="i in 5" :key="i">
+          <v-col lg="3" cols="6" v-for="i in 5" :key="i">
             <span class="input-label">{{ t('Image') }} {{ i }}</span>
             <v-file-input
               v-model="form.gallery[i - 1]"
@@ -81,7 +81,7 @@
             />
           </v-col>
 
-          <v-col cols="3">
+          <v-col lg="3" cols="6">
             <v-switch
               v-model="form.is_active"
               :label="form.is_active ? t('Active') : t('NotActive')"
