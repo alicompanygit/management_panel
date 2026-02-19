@@ -19,7 +19,8 @@
   <v-sheet
     class="mx-auto my-8 custom-carousel-page"
     elevation="8"
-    max-width="800"
+    max-width="1150"
+    style="background-color: #030306"
   >
     <v-slide-group
       class="pa-4"
@@ -29,12 +30,15 @@
       style="background-color: #030306"
     >
       <v-slide-group-item
-        v-for="item in useProduct.searchNewProducts.products"
+        v-for="(item, index) in useProduct.searchNewProducts.products"
         :key="item"
         v-slot="{ isSelected, toggle, selectedClass }"
       >
         <div
-          class="bg-grey py-3 px-3 mx-8 rounded-lg cursor-pointer"
+          :class="[
+            'w-100 bg-grey py-3 px-3 rounded-lg cursor-pointer',
+            index !== 0 ? (mobile ? 'mx-3 ' : 'mx-8 ') : '',
+          ]"
           @click="handleGoDetile(item.id)"
         >
           <img
@@ -45,7 +49,6 @@
               )
             "
             alt="Banner"
-            width="250"
             height="250"
             style="object-fit: cover; border-radius: 10px"
           />
@@ -97,7 +100,7 @@
   <div class="w-100 d-flex justify-center align-center mt-4">
     <div
       class="w-75 py-5 px-5 rounded-lg"
-      style="max-height: 500px; overflow: scroll"
+      style="max-height: 500px; overflow: scroll; scrollbar-width: none"
     >
       <v-row>
         <v-col v-for="product in products" :key="product.id" cols="12" sm="6">
@@ -124,11 +127,12 @@
 import { navigateTo } from 'nuxt/app';
 import { computed, nextTick, onMounted, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { useDisplay } from 'vuetify';
 import { useProduct } from '~/composables/Product';
 import { useBanner } from '~/composables/banner';
 
 const { t } = useI18n();
-
+const { mobile } = useDisplay();
 const folderSearch = ref(null);
 
 const banners = computed(() => useBanner.bannerData?.banners ?? []);
