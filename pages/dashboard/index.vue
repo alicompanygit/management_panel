@@ -1,77 +1,91 @@
 <template>
-  <div
-    class="dashboard-container d-flex justify-center flex-column align-center"
-  >
-    <div class="container w-75 rounded-lg px-4 py-6">
-      <div
-        class="text-secondary2 text-custom w-100 d-flex justify-center"
-        style="font-weight: bold"
-      >
-        {{ t('welcomePanelText') }}
-      </div>
-      <div class="d-flex justify-center ga-1 w-100 mt-3">
-        <span class="text-white" v-text="useAuth.user?.name"></span>
-        <span class="text-white">{{ t('welcomePanelTextRims') }}</span>
-      </div>
-    </div>
-    <div class="w-75 mt-4 d-flex ga-4">
-      <div class="container w-50 d-flex rounded-lg px-4 py-6 ga-3">
-        <div
-          style="
-            background-color: #ffda332d;
-            width: max-content;
-            height: max-content;
-          "
-          class="d-flex py-2 px-2 rounded-sm"
-        >
-          <v-icon icon="proicons:box-add" color="#ffd933" size="40" />
-        </div>
-        <div>
-          <span style="color: #fff; font-weight: bold">{{
-            t('Products')
-          }}</span>
-          <div class="mt-1" style="color: #fff">
-            <span>{{ t('Number') }}:</span>
-            <span class="ms-1">{{
-              useProduct.dashboardData?.stats?.products?.total ?? 0
-            }}</span>
-            <span class="ms-5">{{ t('Active') }}:</span>
-            <span class="ms-1">{{
-              useProduct.dashboardData?.stats?.products?.active ?? 0
-            }}</span>
+  <div class="dashboard-container">
+    <v-container fluid>
+      <!-- Welcome Box -->
+      <v-row justify="center">
+        <v-col cols="12" md="8">
+          <div class="box pa-6 rounded-lg text-center">
+            <div class="text-secondary2 text-title font-weight-bold">
+              {{ t('welcomePanelText') }}
+            </div>
+
+            <!-- فقط متن welcome معکوس شود -->
+            <div class="d-flex justify-center align-center mt-3">
+              <span
+                class="text-white"
+                :class="locale === 'fa' ? 'me-1' : 'ms-1'"
+              >
+                {{ useAuth.user?.name }}
+              </span>
+              <span class="text-white">
+                {{ t('welcomePanelTextRims') }}
+              </span>
+            </div>
           </div>
-        </div>
-      </div>
-      <div class="container w-50 d-flex rounded-lg px-4 py-6 ga-3">
-        <div
-          style="
-            background-color: #ffda332d;
-            width: max-conten;
-            height: max-content;
-          "
-          class="d-flex py-2 px-2 rounded-sm"
-        >
-          <v-icon
-            size="40"
-            icon="material-symbols:planner-banner-ad-pt-outline"
-            color="#ffd933"
-          />
-        </div>
-        <div>
-          <span style="color: #fff; font-weight: bold">{{ t('Banners') }}</span>
-          <div class="mt-1" style="color: #fff">
-            <span>{{ t('Number') }}:</span>
-            <span class="ms-1">{{
-              useProduct.dashboardData?.stats?.banners?.total ?? 0
-            }}</span>
-            <span class="ms-5">{{ t('Active') }}:</span>
-            <span class="ms-1">{{
-              useProduct.dashboardData?.stats?.banners?.active ?? 0
-            }}</span>
+        </v-col>
+      </v-row>
+
+      <!-- Stats Boxes -->
+      <v-row class="mt-4" justify="center">
+        <!-- Products -->
+        <v-col cols="12" md="4">
+          <div class="box pa-6 rounded-lg d-flex align-center ga-4">
+            <div class="icon-box">
+              <v-icon icon="proicons:box-add" color="#ffd933" size="40" />
+            </div>
+
+            <div class="flex-grow-1">
+              <div class="text-white font-weight-bold">
+                {{ t('Products') }}
+              </div>
+
+              <div class="d-flex flex-wrap mt-2 text-white">
+                <div class="me-4">
+                  {{ t('Number') }}:
+                  {{ useProduct.dashboardData?.stats?.products?.total ?? 0 }}
+                </div>
+
+                <div>
+                  {{ t('Active') }}:
+                  {{ useProduct.dashboardData?.stats?.products?.active ?? 0 }}
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
-    </div>
+        </v-col>
+
+        <!-- Banners -->
+        <v-col cols="12" md="4">
+          <div class="box pa-6 rounded-lg d-flex align-center ga-4">
+            <div class="icon-box">
+              <v-icon
+                icon="material-symbols:planner-banner-ad-pt-outline"
+                color="#ffd933"
+                size="40"
+              />
+            </div>
+
+            <div class="flex-grow-1">
+              <div class="text-white font-weight-bold">
+                {{ t('Banners') }}
+              </div>
+
+              <div class="d-flex flex-wrap mt-2 text-white">
+                <div class="me-4">
+                  {{ t('Number') }}:
+                  {{ useProduct.dashboardData?.stats?.banners?.total ?? 0 }}
+                </div>
+
+                <div>
+                  {{ t('Active') }}:
+                  {{ useProduct.dashboardData?.stats?.banners?.active ?? 0 }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </v-col>
+      </v-row>
+    </v-container>
   </div>
 </template>
 
@@ -81,28 +95,35 @@ import { useI18n } from 'vue-i18n';
 import { useAuth } from '~/composables/auth';
 import { useProduct } from '~/composables/product';
 
-const { t } = useI18n();
-
 definePageMeta({
   layout: 'dashboard',
 });
 
-onMounted(async () => {
+const { t, locale } = useI18n();
+
+onMounted(() => {
   useProduct.apiDashboardData();
 });
 </script>
 
 <style scoped>
 .dashboard-container {
-  width: 100%;
-  height: calc(100vh - 100px) !important;
+  min-height: calc(100vh - 100px);
+  padding: 16px;
 }
 
-.container {
+.box {
   background-color: #1c1c21;
+  width: 100%;
 }
 
-.text-custom {
-  font-size: 30px;
+.text-title {
+  font-size: 26px;
+}
+
+.icon-box {
+  background-color: #ffda332d;
+  padding: 8px;
+  border-radius: 6px;
 }
 </style>
