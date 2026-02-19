@@ -104,7 +104,7 @@ const whatsappLink = () => {
   const text =
     `Brand: ${product.value?.brand_name ?? '-'}\n` +
     `Tire: ${product.value?.tire_name ?? '-'}\n` +
-    `Code: ${product.value?.product_code ?? '-'}`;
+    `Id: ${product.value?.id ?? '-'}`;
 
   return `https://wa.me/${phoneNumber}?text=${encodeURIComponent(text)}`;
 };
