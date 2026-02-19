@@ -32,7 +32,7 @@ export default {
   Active: 'فعال',
   NotActive: 'غیرفعال',
   AddBanner: 'افزودن بنر',
-  Add: 'اقزودن',
+  Add: 'افزودن',
   SelectImg: 'انتخاب تصویر',
   AddProduct: 'افزودن محصول',
   Enter: 'وارد کنید',

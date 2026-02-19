@@ -60,11 +60,13 @@
             </v-col>
             <v-col cols="6" class="d-flex justify-end align-center">
               <span
+                v-if="!mobile"
                 class="text-waith me-9 cursor-pointer"
                 @click="navigateTo('/#newproduct')"
                 >{{ t('NewProduct') }}</span
               >
               <span
+                v-if="!mobile"
                 class="text-waith me-9 cursor-pointer"
                 @click="navigateTo('/')"
                 >{{ t('Home') }}</span
@@ -95,7 +97,7 @@
 <script setup lang="ts">
 import { navigateTo } from 'nuxt/app';
 import { useI18n } from 'vue-i18n';
-import { useRtl, useTheme } from 'vuetify';
+import { useDisplay, useRtl, useTheme } from 'vuetify';
 import { useAuth } from '~/composables/auth';
 
 const theme = useTheme();
@@ -103,6 +105,7 @@ theme.global.name.value = 'light';
 
 const { t, locale } = useI18n({ useScope: 'global' });
 const rtl = useRtl();
+const { mobile } = useDisplay();
 
 const phoneNumber = '971566794959';
 

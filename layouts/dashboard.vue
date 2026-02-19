@@ -5,6 +5,14 @@
         <v-app-bar elevation="0" :height="65" id="top" class="sticky app-bar">
           <v-row class="px-5">
             <v-col cols="6" class="d-flex align-center">
+              <v-icon
+                icon="boxicons:list"
+                color="#ffd933"
+                @click="drawer = !drawer"
+                size="35px"
+                class="me-6"
+                style="border: 1px solid #ffd933 !important; border-radius: 6px"
+              />
               <base-button
                 v-if="useAuth.user?.is_god || useAuth.user?.is_super_user"
                 name="Dashboard"
@@ -60,11 +68,13 @@
             </v-col>
             <v-col cols="6" class="d-flex justify-end align-center">
               <span
+                v-if="!mobile"
                 class="text-waith me-9 cursor-pointer"
                 @click="navigateTo('/#newproduct')"
                 >{{ t('NewProduct') }}</span
               >
               <span
+                v-if="!mobile"
                 class="text-waith me-9 cursor-pointer"
                 @click="navigateTo('/')"
                 >{{ t('Home') }}</span
@@ -75,11 +85,11 @@
         </v-app-bar>
         <v-navigation-drawer
           left
-          class="leftSidebar"
-          :rail="false"
-          rail-width="70"
           width="230"
           style="background: #1c1c21 !important"
+          v-model="drawer"
+          :temporary="mobile"
+          :permanent="!mobile"
         >
           <div
             class="bg-containerBg bg-primary menu-content"
@@ -112,15 +122,20 @@
 
 <script setup lang="ts">
 import { navigateTo } from 'nuxt/app';
+import { ref } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { useRtl, useTheme } from 'vuetify';
+import { useDisplay, useRtl, useTheme } from 'vuetify';
 import { useAuth } from '~/composables/auth';
 
 const theme = useTheme();
 theme.global.name.value = 'light';
 
-const { t, locale } = useI18n({ useScope: 'global' });
 const rtl = useRtl();
+const { mobile } = useDisplay();
+
+const { t, locale } = useI18n({ useScope: 'global' });
+
+const drawer = ref(true);
 
 const sidebarItem = [
   {
