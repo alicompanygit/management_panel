@@ -62,7 +62,12 @@
       </v-col>
     </v-row>
     <div class="w-100 d-flex justify-center align-center my-10">
-      <div class="w-50 d-flex justify-space-between align-center">
+      <div
+        :class="[
+          mobile ? 'w-100' : 'w-50',
+          'd-flex justify-space-between align-center',
+        ]"
+      >
         <base-button
           name="NextPage"
           color="#FFD933"
@@ -90,12 +95,14 @@ import { useRoute, useRouter } from '#imports';
 import { navigateTo } from 'nuxt/app';
 import { computed, nextTick, onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { useDisplay } from 'vuetify';
 import { useProduct } from '~/composables/Product';
 import { useBanner } from '~/composables/banner';
 
 const { t } = useI18n();
 const route = useRoute();
 const router = useRouter();
+const { mobile } = useDisplay();
 
 const page = ref(1);
 
