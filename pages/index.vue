@@ -136,7 +136,7 @@ const { t } = useI18n();
 const { mobile } = useDisplay();
 const folderSearch = ref(null);
 
-const banners = computed(() => useBanner.bannerData?.banners ?? []);
+const banners = computed(() => useBanner.bannerActiveData?.banners ?? []);
 const products = computed(() => useProduct.folders?.items ?? []);
 
 const getFullImageUrl = (path: string) => {
@@ -171,7 +171,7 @@ watch(
 );
 
 onMounted(async () => {
-  await useBanner.apiGetBanners();
+  await useBanner.apiGetActiveBanners();
   await useProduct.apiSearchProductsNew();
   await useProduct.apiGetFolders({ brand_name: folderSearch.value ?? null });
 });

@@ -74,6 +74,16 @@
           ></v-switch>
         </div>
       </template>
+
+      <template v-slot:action="{ item }">
+        <v-icon
+          @click="removeBanner(item)"
+          icon="fluent:delete-24-regular"
+          color="#F95959"
+          size="22"
+          class="cursor-pointer"
+        />
+      </template>
     </base-table-server>
   </div>
 </template>
@@ -98,6 +108,7 @@ const tableHeaders = computed(() => [
   { title: t('CreatedDate'), key: 'created_at' },
   { title: t('Image'), key: 'image' },
   { title: t('Status'), key: 'is_active' },
+  { title: t('Action'), key: 'action' },
 ]);
 
 const tableData = computed(() => useBanner.bannerData);
@@ -137,6 +148,14 @@ const returnDate = (input: string) => {
 const getFullImageUrl = (path: string) => {
   if (!path) return '';
   return `${useBanner.config.public.baseUrl}${path}`;
+};
+
+const removeBanner = async (bannerData: any) => {
+  if (!bannerData || !bannerData?.id) return;
+  loading.value = true;
+  await useBanner.apiDeleteBanner(bannerData.id);
+  await fetchBannerList();
+  loading.value = false;
 };
 
 onMounted(async () => {

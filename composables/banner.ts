@@ -18,6 +18,7 @@ interface IApiResponse<T> {
 
 export class Banner {
   bannerData = {};
+  bannerActiveData = {};
 
   private get config() {
     return useRuntimeConfig();
@@ -105,6 +106,41 @@ export class Banner {
 
       if (res) this.bannerData = res;
       else this.bannerData = {};
+    } catch (error) {
+      console.error('apiGetBanners error:', error);
+      return false;
+    }
+  }
+
+  async apiGetActiveBanners() {
+    try {
+      const res = await this.fetchWithAuth<IApiResponse<IBanner>>(
+        `${this.config.public.baseUrl}/get_active_banners`,
+        {
+          method: 'GET',
+        },
+        true
+      );
+
+      if (res) this.bannerActiveData = res;
+      else this.bannerActiveData = {};
+    } catch (error) {
+      console.error('apiGetBanners error:', error);
+      return false;
+    }
+  }
+
+  async apiDeleteBanner(id: number) {
+    try {
+      const res = await this.fetchWithAuth<IApiResponse<IBanner>>(
+        `${this.config.public.baseUrl}/delete_banner/${id}`,
+        {
+          method: 'DELETE',
+        }
+      );
+
+      if (res) this.bannerActiveData = res;
+      else this.bannerActiveData = {};
     } catch (error) {
       console.error('apiGetBanners error:', error);
       return false;
