@@ -52,14 +52,29 @@
             <div class="mt-2">
               {{ `${t('Quality')}: ${product?.quality ?? '-'}` }}
             </div>
-            <div class="mt-2">
+            <div class="mt-2" v-if="locale === 'fa'">
               bolt:
-              <span dir="ltr">{{ product?.bolt ?? '-' }}</span>
+              <span :dir="locale === 'fa' ? 'rtl' : 'ltr'">
+                {{ product?.bolt ?? '-' }}
+              </span>
             </div>
-
-            <div class="mt-2">
+            <div class="mt-2" v-else>
+              <span>
+                {{ product?.bolt ?? '-' }}
+              </span>
+              :boltdd
+            </div>
+            <div class="mt-2" v-if="locale === 'fa'">
               CB:
-              <span dir="ltr">{{ product?.cb ?? '-' }}</span>
+              <span :dir="locale === 'fa' ? 'rtl' : 'ltr'">
+                {{ product?.cb ?? '-' }}
+              </span>
+            </div>
+            <div class="mt-2" v-else>
+              <span>
+                {{ product?.cb ?? '-' }}
+              </span>
+              :CB
             </div>
 
             <div class="mt-2">
@@ -93,7 +108,7 @@ import { useI18n } from 'vue-i18n';
 import { useProduct } from '~/composables/Product';
 import { useBanner } from '~/composables/banner';
 
-const { t } = useI18n();
+const { t, locale } = useI18n();
 
 const selectedImage = ref<string>('');
 const phoneNumber = '971566794959';

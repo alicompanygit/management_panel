@@ -65,7 +65,7 @@
       </template>
 
       <template v-slot:is_active="{ item }">
-        <div class="d-flex justify-center">
+        <div class="d-flex justify-center" style="min-width: max-content">
           <v-switch
             :label="item.is_active ? t('Active') : t('NotActive')"
             :model-value="item.is_active"
