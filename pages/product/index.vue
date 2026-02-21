@@ -132,7 +132,9 @@ const exportToWhatsApp = () => {
 
   const message =
     'Selected Product IDs:\n\n' +
-    selectedIds.value.map((id) => `ID: ${id}`).join('\n');
+    selectedIds.value
+      .map((product_code) => `product-code: ${product_code}`)
+      .join('\n');
 
   const url = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
   window.open(url, '_blank');
