@@ -52,6 +52,7 @@
         sm="6"
         md="4"
         class="d-flex justify-center mb-4"
+        style="max-width: max-content !important"
       >
         <v-card
           elevation="2"
