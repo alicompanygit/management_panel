@@ -51,8 +51,8 @@
               )
             "
             alt="Banner"
-            :height="mobile ? '227' : '333'"
-            :width="mobile ? '160' : '250'"
+            :height="mobile ? '207' : '333'"
+            :width="mobile ? '140' : '250'"
             style="object-fit: cover; border-radius: 10px"
           />
           <div
