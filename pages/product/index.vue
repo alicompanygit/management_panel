@@ -26,6 +26,27 @@
       </v-col>
     </v-row>
 
+    <v-row class="justify-center">
+      <div
+        class="d-flex justify-center ga-4 bg-grey py-3 px-5 rounded rounded-lg"
+      >
+        <base-button
+          name="Forged"
+          :variant="type === 'forged' ? 'outlined' : ''"
+          color="#FFD933"
+          class="px-8"
+          @click="handleChangeType('forged')"
+        />
+        <base-button
+          name="Normal"
+          :variant="type === 'normal' ? 'outlined' : ''"
+          color="#FFD933"
+          class="px-8"
+          @click="handleChangeType('normal')"
+        />
+      </div>
+    </v-row>
+
     <v-row>
       <v-col v-for="product in products" :key="product.id" cols="6" sm="4">
         <v-card
@@ -91,29 +112,20 @@
 </template>
 
 <script setup lang="ts">
-import { useRoute, useRouter } from '#imports';
-import { navigateTo } from 'nuxt/app';
 import { computed, nextTick, onMounted, ref } from 'vue';
-import { useI18n } from 'vue-i18n';
-import { useDisplay } from 'vuetify';
 import { useProduct } from '~/composables/Product';
 import { useBanner } from '~/composables/banner';
+import { navigateTo } from 'nuxt/app';
+import { useDisplay } from 'vuetify';
+import { useI18n } from 'vue-i18n';
 
-const { t } = useI18n();
-const route = useRoute();
-const router = useRouter();
 const { mobile } = useDisplay();
-
-const page = ref(1);
-
-const phone = '971566794959';
+const { t } = useI18n();
 
 const selectedIds = ref<number[]>([]);
-
-const path = computed(() => ({
-  brand_name: route?.query?.brand_name,
-  tire_name: route?.query?.tire_name,
-}));
+const type = ref('normal');
+const phone = '971566794959';
+const page = ref(1);
 
 const products = computed(() => useProduct.foldersProduct?.products ?? []);
 
@@ -122,6 +134,27 @@ const allSelected = computed(
     products.value.length > 0 &&
     selectedIds.value.length === products.value.length
 );
+
+const getProductData = () => {
+  const dataStr = localStorage.getItem('productData');
+  const productData = dataStr ? JSON.parse(dataStr) : null;
+
+  if (!productData?.brand_name || !productData?.tire_name) return null;
+  return productData;
+};
+
+const fetchProducts = async () => {
+  const productData = getProductData();
+  if (!productData) return;
+
+  await useProduct.apiGetFolderProduct({
+    page: page.value,
+    per_page: 10,
+    brand_name: productData.brand_name,
+    tire_name: productData.tire_name,
+    search_type: type.value,
+  });
+};
 
 const toggleSelectAll = () => {
   selectedIds.value = allSelected.value ? [] : products.value.map((p) => p.id);
@@ -146,54 +179,29 @@ const getFullImageUrl = (path: string) => {
 };
 
 const nextPage = async () => {
-  const dataStr = localStorage.getItem('productData');
-  const productData = dataStr ? JSON.parse(dataStr) : null;
-
-  if (!productData.brand_name || !productData.tire_name) return;
-
   page.value++;
-  await useProduct.apiGetFolderProduct({
-    page: page.value,
-    per_page: 10,
-    brand_name: productData.brand_name,
-    tire_name: productData.tire_name,
-  });
+  await fetchProducts();
 };
 
 const previousPage = async () => {
-  const dataStr = localStorage.getItem('productData');
-  const productData = dataStr ? JSON.parse(dataStr) : null;
-
-  if (!productData.brand_name || !productData.tire_name) return;
-
+  if (page.value <= 1) return;
   page.value--;
-  await useProduct.apiGetFolderProduct({
-    page: page.value,
-    per_page: 10,
-    brand_name: productData.brand_name,
-    tire_name: productData.tire_name,
-  });
+  await fetchProducts();
 };
 
-const handleGoDetile = async (id) => {
+const handleGoDetile = async (id: number) => {
   if (!id) return;
 
-  localStorage.setItem('productDetail', id);
+  localStorage.setItem('productDetail', id.toString());
   await nextTick();
   navigateTo(`/product/detail`);
 };
 
-onMounted(async () => {
-  const dataStr = localStorage.getItem('productData');
-  const productData = dataStr ? JSON.parse(dataStr) : null;
+const handleChangeType = async (typeValue: string) => {
+  type.value = typeValue;
+  page.value = 1;
+  await fetchProducts();
+};
 
-  if (!productData.brand_name || !productData.tire_name) return;
-
-  await useProduct.apiGetFolderProduct({
-    page: page.value,
-    per_page: 10,
-    brand_name: productData.brand_name,
-    tire_name: productData.tire_name,
-  });
-});
+onMounted(fetchProducts);
 </script>
