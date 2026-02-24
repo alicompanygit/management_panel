@@ -1,8 +1,5 @@
 <template>
-  <v-container
-    class="pa-4 fill-height d-flex align-center justify-center"
-    :dir="locale === 'fa' ? 'rtl' : 'ltr'"
-  >
+  <v-container class="pa-4" :dir="locale === 'fa' ? 'rtl' : 'ltr'">
     <v-card class="bg-grey px-7 py-7" max-width="1000" width="100%">
       <v-row>
         <!-- Image Section -->
@@ -13,15 +10,10 @@
           :order-md="locale === 'fa' ? 1 : 2"
           class="px-8"
         >
-          <v-img
-            eager
-            :src="getFullImageUrl(selectedImage)"
-            height="400"
-            cover
-            class="mb-4 rounded-lg"
-          />
+          <div class="ratio-3-4 mb-4">
+            <v-img :src="getFullImageUrl(selectedImage)" eager />
+          </div>
 
-          <!-- Thumbnails -->
           <v-row dense :justify="locale === 'fa' ? 'start' : 'end'">
             <v-col
               v-for="(img, index) in product?.images"
@@ -29,14 +21,12 @@
               cols="3"
               class="d-flex justify-center"
             >
-              <v-img
-                :src="getFullImageUrl(img.url)"
-                height="60"
-                width="60"
-                cover
-                class="rounded cursor-pointer"
+              <div
+                class="ratio-3-4 cursor-pointer"
                 @click="selectedImage = img.url"
-              />
+              >
+                <v-img :src="getFullImageUrl(img.url)" />
+              </div>
             </v-col>
           </v-row>
         </v-col>
@@ -183,3 +173,19 @@ onMounted(async () => {
   }
 });
 </script>
+
+<style>
+.ratio-3-4 {
+  position: relative;
+  width: 100%;
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+.ratio-3-4 >>> .v-image__image {
+  border-radius: inherit;
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+}
+</style>
