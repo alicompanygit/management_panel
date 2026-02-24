@@ -256,11 +256,15 @@ export class Product {
     }
   }
 
-  async apiGetProductsFull() {
+  async apiGetProductsFull(data: {
+    page: number;
+    per_page: number;
+    search_product_code?: string;
+  }) {
     try {
       const res = await this.fetchWithAuth<IApiResponse<IProductFull>>(
-        `${this.config.public.baseUrl}/get_products_full`,
-        { method: 'GET' },
+        `${this.config.public.baseUrl}/get-products-full`,
+        { method: 'POST', body: { ...data } },
         true
       );
 

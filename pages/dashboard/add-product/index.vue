@@ -109,6 +109,13 @@
       </v-form>
     </div>
   </div>
+  <div class="my-3">
+    <base-form-text-field
+      v-model="code_search"
+      clearable
+      placeholder="SearchInCode"
+    />
+  </div>
   <div
     class="dashboard-container dashboard-user-management d-flex justify-center align-center text-white px-4"
   >
@@ -216,6 +223,7 @@
     title="EditProduct"
     @close="editDrawer = false"
     class="product-edit-drawer"
+    @pageControler="onPageControler"
   >
     <template #content>
       <v-form class="px-4 py-3">
@@ -268,18 +276,22 @@ import { requiredRule } from '@/utils/validation';
 import { computed, onMounted, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useProduct } from '~/composables/product';
+import { useTableStore } from '~/stores/tableHandler';
 
 definePageMeta({ layout: 'dashboard' });
 
 const { t } = useI18n();
+const tableStore = useTableStore();
 
 const selectedProduct = ref<any>(null);
 const loadingAddProduct = ref(false);
+const code_search = ref<string>('');
 const editLoading = ref(false);
 const formRef = ref<any>(null);
 const editDrawer = ref(false);
-const loading = ref(false);
 const editForm = ref<any>({});
+const loading = ref(false);
+const page = ref(1);
 const getFullImageUrl = (path: string) => {
   if (!path) return '';
   return `${useProduct.config.public.baseUrl}${path}`;
@@ -393,9 +405,18 @@ const handleSubmit = async () => {
   await fetchProductList();
 };
 
-const fetchProductList = async () => {
+const fetchProductList = async (
+  pageNumber: number = page.value,
+  search: string = ''
+) => {
   loading.value = true;
-  await useProduct.apiGetProductsFull();
+
+  await useProduct.apiGetProductsFull({
+    per_page: 30,
+    page: pageNumber,
+    search_product_code: search,
+  });
+
   loading.value = false;
 };
 
@@ -474,9 +495,23 @@ watch(editDrawer, (val: boolean) => {
       is_active: false,
       is_new: false,
     };
-    selectedProduct.value = null; // اختیاری
+    selectedProduct.value = null;
   }
 });
+
+const onPageControler = (info?: any) => {
+  if (info) {
+    page.value = info.page;
+  }
+};
+
+watch(
+  () => code_search.value,
+  (newVal: string) => {
+    fetchProductList(1, newVal);
+    tableStore.currentPage = 1;
+  }
+);
 
 onMounted(async () => {
   await fetchProductList();
