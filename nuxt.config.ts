@@ -14,13 +14,19 @@ export default defineNuxtConfig({
   pwa: {
     registerType: 'autoUpdate',
     manifest: {
-      name: 'App Name',
+      name: 'RIMS',
       short_name: 'App',
       start_url: '/',
       display: 'standalone',
       theme_color: '#ffffff',
-      background_color: '#ffffff',
-      icons: [],
+      background_color: '#FFD933',
+      icons: [
+        {
+          src: '/icons/pwa.png',
+          sizes: '512x512',
+          type: 'image/png',
+        },
+      ],
     },
   },
 
