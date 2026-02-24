@@ -1,8 +1,18 @@
 <template>
-  <v-container class="pa-4 fill-height d-flex align-center justify-center">
+  <v-container
+    class="pa-4 fill-height d-flex align-center justify-center"
+    :dir="locale === 'fa' ? 'rtl' : 'ltr'"
+  >
     <v-card class="bg-grey px-7 py-7" max-width="1000" width="100%">
       <v-row>
-        <v-col cols="12" md="6" class="px-8">
+        <!-- Image Section -->
+        <v-col
+          cols="12"
+          md="6"
+          order="1"
+          :order-md="locale === 'fa' ? 1 : 2"
+          class="px-8"
+        >
           <v-img
             eager
             :src="getFullImageUrl(selectedImage)"
@@ -11,11 +21,13 @@
             class="mb-4 rounded-lg"
           />
 
-          <v-row dense>
+          <!-- Thumbnails -->
+          <v-row dense :justify="locale === 'fa' ? 'start' : 'end'">
             <v-col
               v-for="(img, index) in product?.images"
               :key="index"
               cols="3"
+              class="d-flex justify-center"
             >
               <v-img
                 :src="getFullImageUrl(img.url)"
@@ -29,66 +41,93 @@
           </v-row>
         </v-col>
 
-        <v-col cols="12" md="6" style="border-right: 3px solid #ffda3320">
-          <div class="pa-4 text-white">
+        <!-- Info Section -->
+        <v-col
+          cols="12"
+          md="6"
+          order="2"
+          :order-md="locale === 'fa' ? 2 : 1"
+          :style="
+            locale === 'fa'
+              ? 'border-right: 3px solid #ffda3320'
+              : 'border-left: 3px solid #ffda3320'
+          "
+        >
+          <div
+            class="pa-4 text-white"
+            :class="locale === 'fa' ? 'text-left' : 'text-right'"
+          >
             <div class="text-h2 mb-5 text-secondary2">
               {{ product?.brand_name }}
             </div>
+
             <div class="mt-2">
               {{ `${t('TireName')}: ${product?.tire_name ?? '-'}` }}
             </div>
+
             <div class="mt-2">
               {{ `${t('TireSize')}: ${product?.tire_size ?? '-'}` }}
             </div>
+
             <div class="mt-2">
               {{ `${t('Type')}: ${product?.type ?? '-'}` }}
             </div>
+
             <div class="mt-2">
               {{ `${t('Width')}: ${product?.width ?? '-'}` }}
             </div>
+
             <div class="mt-2">
               {{ `${t('Color')}: ${product?.color ?? '-'}` }}
             </div>
+
             <div class="mt-2">
               {{ `${t('Quality')}: ${product?.quality ?? '-'}` }}
             </div>
-            <div class="mt-2" v-if="locale === 'fa'">
-              bolt:
-              <span :dir="locale === 'fa' ? 'rtl' : 'ltr'">
-                {{ product?.bolt ?? '-' }}
+
+            <!-- Bolt -->
+            <div class="mt-2">
+              <span v-if="locale === 'fa'">
+                bolt:
+                <span dir="rtl">{{ product?.bolt ?? '-' }}</span>
+              </span>
+              <span v-else>
+                <span>{{ product?.bolt ?? '-' }}</span> :bolt
               </span>
             </div>
-            <div class="mt-2" v-else>
-              <span>
-                {{ product?.bolt ?? '-' }}
+
+            <!-- CB -->
+            <div class="mt-2">
+              <span v-if="locale === 'fa'">
+                CB:
+                <span dir="rtl">{{ product?.cb ?? '-' }}</span>
               </span>
-              :boltdd
-            </div>
-            <div class="mt-2" v-if="locale === 'fa'">
-              CB:
-              <span :dir="locale === 'fa' ? 'rtl' : 'ltr'">
-                {{ product?.cb ?? '-' }}
+              <span v-else>
+                <span>{{ product?.cb ?? '-' }}</span> :CB
               </span>
-            </div>
-            <div class="mt-2" v-else>
-              <span>
-                {{ product?.cb ?? '-' }}
-              </span>
-              :CB
             </div>
 
             <div class="mt-2">
               {{ `${t('ProductId')}: ${product?.product_code ?? '-'}` }}
             </div>
+
             <div class="mt-2">
               {{ `${t('Status')}: ${product?.is_active ? 'فعال' : 'غیرفعال'}` }}
             </div>
+
             <div class="mt-2" v-if="product?.is_active">
-              {{ `${t('New')}` }}
+              {{ t('New') }}
             </div>
           </div>
         </v-col>
-        <v-col cols="12" class="d-flex justify-end">
+
+        <!-- Whatsapp Button -->
+        <v-col
+          cols="12"
+          class="d-flex"
+          order="3"
+          :class="locale === 'fa' ? 'justify-end' : 'justify-start'"
+        >
           <base-button
             style="margin-top: -30px"
             name="Whatsapp"
@@ -135,7 +174,6 @@ const getFullImageUrl = (path: string) => {
 
 onMounted(async () => {
   const id = localStorage.getItem('productDetail');
-
   if (!id) return;
 
   await useProduct.apiGetProductDetail(Number(id));
