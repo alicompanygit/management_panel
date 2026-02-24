@@ -22,9 +22,15 @@ export default defineNuxtConfig({
       background_color: '#FFD933',
       icons: [
         {
-          src: '/icons/pwa.png',
+          src: '/icons/pwa512.jpg',
           sizes: '512x512',
-          type: 'image/png',
+          type: 'image/jpeg',
+          purpose: 'any maskable',
+        },
+        {
+          src: '/icons/pwa192.jpg',
+          sizes: '192x192',
+          type: 'image/jpeg',
         },
       ],
     },
