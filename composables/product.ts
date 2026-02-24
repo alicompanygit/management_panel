@@ -263,9 +263,8 @@ export class Product {
   }) {
     try {
       const res = await this.fetchWithAuth<IApiResponse<IProductFull>>(
-        `${this.config.public.baseUrl}/get-products-full`,
-        { method: 'POST', body: { ...data } },
-        true
+        `${this.config.public.baseUrl}/api/get-products-full`,
+        { method: 'POST', body: { ...data } }
       );
 
       console.log(res);
@@ -406,7 +405,7 @@ export class Product {
   async apiGetFolderProduct(data?: any) {
     try {
       const res = await this.fetchWithAuth<IApiResponse<TSearchNewProduct>>(
-        `${this.config.public.baseUrl}/get_products_by_brand_and_tire`,
+        `${this.config.public.baseUrl}/api/get-products-by-brand-and-tire`,
         { method: 'POST', body: { ...data } },
         true
       );
