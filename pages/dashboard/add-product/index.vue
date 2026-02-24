@@ -109,11 +109,13 @@
       </v-form>
     </div>
   </div>
-  <div class="my-3">
+  <div class="my-3 d-flex justify-end px-3">
     <base-form-text-field
       v-model="code_search"
       clearable
       placeholder="SearchInCode"
+      bgColor="#26262c"
+      style="width: 250px"
     />
   </div>
   <div
