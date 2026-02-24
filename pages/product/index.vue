@@ -14,7 +14,6 @@
           "
         />
       </v-col>
-
       <v-col>
         <base-button
           icon="circum:export"
@@ -26,10 +25,8 @@
       </v-col>
     </v-row>
 
-    <v-row class="justify-center">
-      <div
-        class="d-flex justify-center ga-4 bg-grey py-3 px-5 rounded rounded-lg"
-      >
+    <v-row class="justify-center mb-4">
+      <div class="d-flex justify-center ga-4 bg-grey py-3 px-5 rounded-lg">
         <base-button
           name="Forged"
           :variant="type === 'forged' ? 'outlined' : ''"
@@ -47,41 +44,54 @@
       </div>
     </v-row>
 
-    <v-row>
-      <v-col v-for="product in products" :key="product.id" cols="6" sm="4">
+    <v-row class="justify-center">
+      <v-col
+        v-for="product in products"
+        :key="product.id"
+        cols="12"
+        sm="6"
+        md="4"
+        class="d-flex justify-center mb-4"
+      >
         <v-card
           elevation="2"
-          class="pa-2 text-center bg-grey"
+          class="bg-grey text-center"
           :class="{
             'border-lg border-primary': selectedIds.includes(product.id),
+          }"
+          :style="{
+            width: mobile ? '200px' : '250px',
+            height: mobile ? '267px' : '333px',
+            display: 'flex',
+            'flex-direction': 'column',
+            'justify-content': 'space-between',
           }"
         >
           <v-img
             :src="getFullImageUrl(product.cover)"
-            max-height="350"
-            aspect-ratio="1"
+            :height="mobile ? '267px' : '333px'"
+            :width="mobile ? '200px' : '250px'"
+            class="rounded-lg cursor-pointer"
             cover
-            class="mb-2 rounded-lg cursor-pointer"
             @click="handleGoDetile(product.id)"
           />
-
           <div
-            class="mt-6 text-white text-secondary2 cursor-pointer"
-            style="font-size: 18px !important"
+            class="text-white text-secondary2 mt-2 cursor-pointer"
+            style="font-size: 18px"
             @click="handleGoDetile(product.id)"
           >
             ID: {{ product.product_code }}
           </div>
-
           <v-checkbox
-            :value="product.id"
             v-model="selectedIds"
+            :value="product.id"
             density="compact"
             hide-details
           />
         </v-card>
       </v-col>
     </v-row>
+
     <div class="w-100 d-flex justify-center align-center my-10">
       <div
         :class="[
@@ -93,7 +103,7 @@
           name="NextPage"
           color="#FFD933"
           @click="nextPage"
-          :disabled="useProduct.foldersProduct?.count ?? 0 / 10 >= page"
+          :disabled="(useProduct.foldersProduct?.count ?? 0) / 10 >= page"
           icon="fluent:arrow-right-20-regular"
           iconSize="16px"
         />
@@ -138,7 +148,6 @@ const allSelected = computed(
 const getProductData = () => {
   const dataStr = localStorage.getItem('productData');
   const productData = dataStr ? JSON.parse(dataStr) : null;
-
   if (!productData?.brand_name || !productData?.tire_name) return null;
   return productData;
 };
@@ -146,7 +155,6 @@ const getProductData = () => {
 const fetchProducts = async () => {
   const productData = getProductData();
   if (!productData) return;
-
   await useProduct.apiGetFolderProduct({
     page: page.value,
     per_page: 10,
@@ -162,7 +170,6 @@ const toggleSelectAll = () => {
 
 const exportToWhatsApp = () => {
   if (!selectedIds.value.length) return;
-
   const message =
     'Selected Product IDs:\n\n' +
     selectedIds.value
@@ -191,7 +198,6 @@ const previousPage = async () => {
 
 const handleGoDetile = async (id: number) => {
   if (!id) return;
-
   localStorage.setItem('productDetail', id.toString());
   await nextTick();
   navigateTo(`/product/detail`);
