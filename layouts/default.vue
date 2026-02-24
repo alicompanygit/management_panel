@@ -77,12 +77,12 @@
         </v-app-bar>
         <router-view />
       </v-container>
-      <v-footer app>
-        <div class="w-100 d-flex justify-center text-white py-2">
-          Address Al Mamoun Tyres Trading CO LLC Sharhah - industrial 8 - WH:C6
-        </div>
-      </v-footer>
     </v-main>
+    <v-footer height="auto" class="text-white">
+      <div class="w-100 d-flex justify-center py-2">
+        Address Al Mamoun Tyres Trading CO LLC Sharhah - industrial 8 - WH:C6
+      </div>
+    </v-footer>
     <a :href="whatsappLink" target="_blank" class="whatsapp-float">
       <div
         style="background-color: #25d366; border-radius: 999px"
