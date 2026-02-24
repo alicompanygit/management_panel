@@ -1,11 +1,13 @@
 <template>
   //slider
   <v-carousel cycle interval="3000" class="custom-carousel-page">
-    <v-carousel-item
-      v-for="item in banners"
-      :src="getFullImageUrl(item.image)"
-      cover
-    ></v-carousel-item>
+    <v-carousel-item v-for="item in banners" :key="item.id">
+      <img
+        :src="getFullImageUrl(item.image)"
+        alt="Banner"
+        style="width: 100% !important; object-fit: contain"
+      />
+    </v-carousel-item>
   </v-carousel>
 
   <h2 class="text-waith text-center mt-16 pt-10">
@@ -100,7 +102,7 @@
   </div>
   <div class="w-100 d-flex justify-center align-center mt-4">
     <div
-      class="w-75 py-5 px-5 rounded-lg"
+      :class="['rounded-lg', mobile ? 'w-100 px-0 py-3' : 'w-75 px-5 py-5']"
       style="max-height: 500px; overflow: scroll; scrollbar-width: none"
     >
       <v-row>
