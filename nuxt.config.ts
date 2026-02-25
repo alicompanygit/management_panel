@@ -14,7 +14,7 @@ export default defineNuxtConfig({
   pwa: {
     registerType: 'autoUpdate',
     manifest: {
-      name: 'RIMS',
+      name: 'AMT',
       short_name: 'App',
       start_url: '/',
       display: 'standalone',
