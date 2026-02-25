@@ -10,13 +10,13 @@
     </v-carousel-item>
   </v-carousel>
 
-  <h2 class="text-waith text-center mt-16 pt-10">
+  <h2 :class="['text-waith text-center pt-10', mobile ? 'mt-0' : 'mt-16']">
     {{ t('NewProduct') }}
   </h2>
   <v-divider
     :thickness="2"
     color="#FFD933"
-    class="border-opacity-100 my-5"
+    :class="['border-opacity-100', mobile ? 'my-1' : 'my-5']"
   ></v-divider>
   <v-sheet
     class="mx-auto my-8 custom-carousel-page"
@@ -67,7 +67,7 @@
   <v-divider
     :thickness="2"
     color="#FFD933"
-    class="border-opacity-100 my-5"
+    :class="['border-opacity-100', mobile ? 'my-1' : 'my-5']"
   ></v-divider>
 
   <div class="w-100 d-flex justify-center align-center mt-4">
