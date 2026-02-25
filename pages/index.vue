@@ -1,11 +1,11 @@
 <template>
   //slider
-  <v-carousel cycle interval="3000" class="custom-carousel-page">
+  <v-carousel cycle interval="3000" class="custom-carousel-page" height="250">
     <v-carousel-item v-for="item in banners" :key="item.id">
       <img
         :src="getFullImageUrl(item.image)"
         alt="Banner"
-        style="width: 100% !important"
+        style="width: 100%; height: 100%; object-fit: fill"
       />
     </v-carousel-item>
   </v-carousel>
@@ -51,13 +51,14 @@
               )
             "
             alt="Banner"
-            :height="mobile ? '207' : '333'"
-            :width="mobile ? '140' : '250'"
+            :height="mobile ? '107' : '333'"
+            :width="mobile ? '70' : '250'"
             style="object-fit: cover; border-radius: 10px"
           />
           <div
+            :style="{ maxWidth: mobile ? '70px' : '250px' }"
             v-text="`${item.brand_name ?? ''} - ${item.tire_name ?? ''}`"
-            class="text-white pt-3"
+            :class="['text-white pt-3 text-break', { 'text-caption': mobile }]"
           ></div>
         </div>
       </v-slide-group-item>
@@ -69,26 +70,6 @@
     class="border-opacity-100 my-5"
   ></v-divider>
 
-  //product
-  <!-- <div class="w-100 d-flex justify-center mt-10">
-    <div
-      style="background-color: #1c1c21"
-      class="py-5 px-10 rounded-lg d-flex ga-4"
-    >
-      <base-button
-        name="Normal"
-        class="px-6"
-        color="#FFD933"
-        textColor="text-waith font-weight-bold"
-      />
-      <base-button
-        name="Forged"
-        class="px-6"
-        color="#FFD933"
-        textColor="text-waith font-weight-bold"
-      />
-    </div>
-  </div> -->
   <div class="w-100 d-flex justify-center align-center mt-4">
     <div class="py-5 px-10 rounded-lg d-flex align-center ga-4">
       <div style="width: 250px">
@@ -180,6 +161,9 @@ onMounted(async () => {
 </script>
 
 <style>
+.v-slide-group {
+  padding: 0 !important;
+}
 .custom-carousel-page {
   .v-btn {
     background: rgba(255, 255, 255, 0.1);
