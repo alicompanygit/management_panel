@@ -70,7 +70,7 @@
             'border-lg border-primary': selectedIds.includes(product.id),
           }"
           :style="{
-            width: mobile ? '210px' : '560px',
+            width: mobile ? '210px' : '460px',
             display: 'flex',
             'flex-direction': 'column',
             'justify-content': 'space-between',
@@ -78,8 +78,8 @@
         >
           <v-img
             :src="getFullImageUrl(product.cover)"
-            :height="mobile ? '267px' : '633px'"
-            :width="mobile ? '200px' : '550px'"
+            :height="mobile ? '267px' : '533px'"
+            :width="mobile ? '200px' : '450px'"
             class="rounded-lg cursor-pointer"
             @click="handleGoDetile(product.id)"
           />
