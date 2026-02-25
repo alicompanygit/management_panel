@@ -114,7 +114,9 @@
           name="NextPage"
           color="#FFD933"
           @click="nextPage"
-          :disabled="(useProduct.foldersProduct?.count ?? 0) / 10 >= page"
+          :disabled="
+            page >= Math.ceil((useProduct.foldersProduct?.count ?? 0) / 10)
+          "
           icon="fluent:arrow-right-20-regular"
           iconSize="16px"
         />
