@@ -102,7 +102,9 @@
             </div>
 
             <div class="mt-2">
-              {{ `${t('Status')}: ${product?.is_active ? 'فعال' : 'غیرفعال'}` }}
+              {{
+                `${t('Status')}: ${product?.is_active ? t('Active') : t('NotActive')}`
+              }}
             </div>
 
             <div class="mt-2" v-if="product?.is_active">
