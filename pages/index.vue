@@ -5,7 +5,7 @@
       <img
         :src="getFullImageUrl(item.image)"
         alt="Banner"
-        style="width: 100% !important; object-fit: contain"
+        style="width: 100% !important"
       />
     </v-carousel-item>
   </v-carousel>
