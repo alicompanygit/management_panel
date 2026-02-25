@@ -109,7 +109,7 @@
       </v-form>
     </div>
   </div>
-  <div class="my-3 d-flex justify-end px-3">
+  <div class="my-3 d-flex justify-center px-3">
     <base-form-text-field
       v-model="code_search"
       clearable
@@ -304,7 +304,7 @@ const returnDate = (input: string) => {
   const [datePart, timePart] = input.split('T');
   const [year, month, day] = datePart.split('-');
   const [hour, minute] = timePart.split(':');
-  return `${hour}:${minute} - ${year}/${day}/${month}`;
+  return `${hour}:${minute} - ${year}/${month}/${day}`;
 };
 
 const tableHeaders = computed(() => [

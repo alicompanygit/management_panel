@@ -26,7 +26,9 @@
     </v-row>
 
     <v-row class="justify-center mb-4">
-      <div class="d-flex justify-center ga-4 bg-grey py-3 px-5 rounded-lg">
+      <div
+        class="d-flex justify-center align-center ga-4 bg-grey py-3 px-5 rounded-lg"
+      >
         <base-button
           name="Forged"
           :variant="type === 'forged' ? 'outlined' : ''"
@@ -40,6 +42,13 @@
           color="#FFD933"
           class="px-8"
           @click="handleChangeType('normal')"
+        />
+        <base-form-text-field
+          v-model="code_search"
+          clearable
+          placeholder="SearchInCode"
+          bgColor="#26262c"
+          style="max-width: 250px; min-width: 150px"
         />
       </div>
     </v-row>
@@ -123,7 +132,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, nextTick, onMounted, ref } from 'vue';
+import { computed, nextTick, onMounted, ref, watch } from 'vue';
 import { useProduct } from '~/composables/Product';
 import { useBanner } from '~/composables/banner';
 import { navigateTo } from 'nuxt/app';
@@ -134,6 +143,7 @@ const { mobile } = useDisplay();
 const { t } = useI18n();
 
 const selectedIds = ref<number[]>([]);
+const code_search = ref<string>('');
 const type = ref('normal');
 const phone = '971566794959';
 const page = ref(1);
@@ -162,6 +172,7 @@ const fetchProducts = async () => {
     brand_name: productData.brand_name,
     tire_name: productData.tire_name,
     search_type: type.value,
+    search_product_code: code_search.value,
   });
 };
 
@@ -209,6 +220,14 @@ const handleChangeType = async (typeValue: string) => {
   page.value = 1;
   await fetchProducts();
 };
+
+watch(
+  () => code_search.value,
+  (newVal: string) => {
+    fetchProducts();
+    page.value = 1;
+  }
+);
 
 onMounted(fetchProducts);
 </script>
