@@ -71,7 +71,11 @@
                 @click="navigateTo('/')"
                 >{{ t('Home') }}</span
               >
-              <span class="text-secondary2 title">Rims</span>
+              <span
+                class="text-secondary2 title cursor-pointer"
+                @click="navigateTo('/')"
+                >Rims</span
+              >
             </v-col>
           </v-row>
         </v-app-bar>
