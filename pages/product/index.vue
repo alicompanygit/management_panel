@@ -65,13 +65,12 @@
       >
         <v-card
           elevation="2"
-          class="bg-grey text-center"
+          class="bg-grey text-center justify-center px-2 py-2"
           :class="{
             'border-lg border-primary': selectedIds.includes(product.id),
           }"
           :style="{
-            width: mobile ? '200px' : '250px',
-            height: mobile ? '267px' : '333px',
+            width: mobile ? '210px' : '560px',
             display: 'flex',
             'flex-direction': 'column',
             'justify-content': 'space-between',
@@ -79,25 +78,27 @@
         >
           <v-img
             :src="getFullImageUrl(product.cover)"
-            :height="mobile ? '267px' : '333px'"
-            :width="mobile ? '200px' : '250px'"
+            :height="mobile ? '267px' : '633px'"
+            :width="mobile ? '200px' : '550px'"
             class="rounded-lg cursor-pointer"
-            cover
             @click="handleGoDetile(product.id)"
           />
-          <div
-            class="text-white text-secondary2 mt-2 cursor-pointer"
-            style="font-size: 18px"
-            @click="handleGoDetile(product.id)"
-          >
-            ID: {{ product.product_code }}
+          <div class="d-flex justify-center align-center text-break ga-2">
+            <v-checkbox
+              v-model="selectedIds"
+              :value="product.id"
+              density="compact"
+              hide-details
+              class="mt-1"
+            />
+            <div
+              class="text-white text-secondary2 mt-2 cursor-pointer text-break"
+              style="font-size: 18px; color: #01c0c8"
+              @click="handleGoDetile(product.id)"
+            >
+              ID: {{ product.product_code }}
+            </div>
           </div>
-          <v-checkbox
-            v-model="selectedIds"
-            :value="product.id"
-            density="compact"
-            hide-details
-          />
         </v-card>
       </v-col>
     </v-row>
