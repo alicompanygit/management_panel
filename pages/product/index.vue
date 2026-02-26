@@ -86,7 +86,7 @@
           <div class="d-flex justify-center align-center text-break ga-2">
             <v-checkbox
               v-model="selectedIds"
-              :value="product.id"
+              :value="product.product_code"
               density="compact"
               hide-details
               class="mt-1"
@@ -135,17 +135,17 @@
 </template>
 
 <script setup lang="ts">
+import { navigateTo } from 'nuxt/app';
 import { computed, nextTick, onMounted, ref, watch } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { useDisplay } from 'vuetify';
 import { useProduct } from '~/composables/Product';
 import { useBanner } from '~/composables/banner';
-import { navigateTo } from 'nuxt/app';
-import { useDisplay } from 'vuetify';
-import { useI18n } from 'vue-i18n';
 
 const { mobile } = useDisplay();
 const { t } = useI18n();
 
-const selectedIds = ref<number[]>([]);
+const selectedIds = ref<string[]>([]);
 const code_search = ref<string>('');
 const type = ref('normal');
 const phone = '971566794959';
@@ -180,7 +180,9 @@ const fetchProducts = async () => {
 };
 
 const toggleSelectAll = () => {
-  selectedIds.value = allSelected.value ? [] : products.value.map((p) => p.id);
+  selectedIds.value = allSelected.value
+    ? []
+    : products.value.map((p) => p.product_code);
 };
 
 const exportToWhatsApp = () => {
