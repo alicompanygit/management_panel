@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid class="pa-4">
+  <v-container fluid class="pa-4 mx-0 px-0">
     <v-row class="mb-4">
       <v-col cols="auto">
         <base-button
@@ -27,7 +27,7 @@
 
     <v-row class="justify-center mb-4">
       <div
-        class="d-flex justify-center align-center ga-4 bg-grey py-3 px-5 rounded-lg"
+        class="d-flex justify-center align-center ga-4 bg-grey py-3 px-5 rounded-lg flex-wrap"
       >
         <base-button
           name="Forged"
@@ -53,35 +53,35 @@
       </div>
     </v-row>
 
-    <v-row class="justify-center">
+    <v-row class="ma-0 justify-center" dense>
       <v-col
         v-for="product in products"
         :key="product.id"
-        cols="12"
-        class="d-flex justify-center mb-4"
-        style="max-width: max-content !important"
+        :cols="mobile ? 6 : 12"
+        class="pa-2 d-flex justify-center"
+        :style="mobile ? '' : 'max-width: max-content !important'"
       >
         <v-card
           elevation="2"
-          class="bg-grey text-center justify-center px-2 py-5"
+          class="bg-grey text-center px-2 py-4 d-flex flex-column justify-space-between"
           :class="{
-            'border-lg border-primary': selectedIds.includes(product.id),
+            'border-lg border-primary': selectedIds.includes(
+              product.product_code
+            ),
           }"
-          :style="{
-            width: mobile ? '140px' : '460px',
-            display: 'flex',
-            'flex-direction': 'column',
-            'justify-content': 'space-between',
-          }"
+          :style="mobile ? 'width: 100%' : 'width: 460px'"
         >
-          <v-img
-            :src="getFullImageUrl(product.cover)"
-            :height="mobile ? '197px' : '533px'"
-            :width="mobile ? '130px' : '450px'"
-            class="rounded-lg cursor-pointer"
-            @click="handleGoDetile(product.id)"
-          />
-          <div class="d-flex justify-center align-center text-break ga-2">
+          <!-- Image 3:4 ratio -->
+          <div class="image-wrapper">
+            <v-img
+              :src="getFullImageUrl(product.cover)"
+              class="rounded-lg cursor-pointer"
+              cover
+              @click="handleGoDetile(product.id)"
+            />
+          </div>
+
+          <div class="d-flex justify-center align-center text-break ga-2 mt-2">
             <v-checkbox
               v-model="selectedIds"
               :value="product.product_code"
@@ -90,8 +90,8 @@
               class="mt-1"
             />
             <div
-              class="text-white text-secondary2 mt-2 cursor-pointer text-break"
-              style="font-size: 18px; color: #01c0c8"
+              class="text-secondary2 cursor-pointer text-break"
+              style="font-size: 16px; color: #01c0c8"
               @click="handleGoDetile(product.id)"
             >
               ID: {{ product.product_code }}
@@ -104,7 +104,7 @@
     <div class="w-100 d-flex justify-center align-center my-10">
       <div
         :class="[
-          mobile ? 'w-100' : 'w-50',
+          mobile ? 'w-100 px-2' : 'w-50',
           'd-flex justify-space-between align-center',
         ]"
       >
@@ -185,6 +185,7 @@ const toggleSelectAll = () => {
 
 const exportToWhatsApp = () => {
   if (!selectedIds.value.length) return;
+
   const message =
     'Selected Product IDs:\n\n' +
     selectedIds.value
@@ -226,11 +227,25 @@ const handleChangeType = async (typeValue: string) => {
 
 watch(
   () => code_search.value,
-  (newVal: string) => {
-    fetchProducts();
+  () => {
     page.value = 1;
+    fetchProducts();
   }
 );
 
 onMounted(fetchProducts);
 </script>
+
+<style scoped>
+.image-wrapper {
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  border-radius: 12px;
+}
+.image-wrapper :deep(img) {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+</style>
