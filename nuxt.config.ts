@@ -15,7 +15,7 @@ export default defineNuxtConfig({
     registerType: 'autoUpdate',
     manifest: {
       name: 'AMT',
-      short_name: 'App',
+      short_name: 'AMT',
       start_url: '/',
       display: 'standalone',
       theme_color: '#ffffff',
