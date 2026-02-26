@@ -142,7 +142,7 @@ const returnDate = (input: string) => {
   const [datePart, timePart] = input.split('T');
   const [year, month, day] = datePart.split('-');
   const [hour, minute] = timePart.split(':');
-  return `${hour}:${minute} - ${year}/${day}/${month}`;
+  return `${hour}:${minute} - ${year}/${month}/${day}`;
 };
 
 const getFullImageUrl = (path: string) => {
