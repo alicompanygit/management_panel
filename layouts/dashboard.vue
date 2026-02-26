@@ -89,7 +89,6 @@
         </v-app-bar>
         <v-navigation-drawer
           left
-          width="230"
           style="background: #1c1c21 !important"
           v-model="drawer"
           :temporary="mobile"
@@ -139,7 +138,7 @@ const { mobile } = useDisplay();
 
 const { t, locale } = useI18n({ useScope: 'global' });
 
-const drawer = ref(true);
+const drawer = ref(false);
 
 const sidebarItem = [
   {
