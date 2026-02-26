@@ -58,19 +58,17 @@
         v-for="product in products"
         :key="product.id"
         cols="12"
-        sm="6"
-        md="4"
         class="d-flex justify-center mb-4"
         style="max-width: max-content !important"
       >
         <v-card
           elevation="2"
-          class="bg-grey text-center justify-center px-2 py-2"
+          class="bg-grey text-center justify-center px-2 py-5"
           :class="{
             'border-lg border-primary': selectedIds.includes(product.id),
           }"
           :style="{
-            width: mobile ? '210px' : '460px',
+            width: mobile ? '140px' : '460px',
             display: 'flex',
             'flex-direction': 'column',
             'justify-content': 'space-between',
@@ -78,8 +76,8 @@
         >
           <v-img
             :src="getFullImageUrl(product.cover)"
-            :height="mobile ? '267px' : '533px'"
-            :width="mobile ? '200px' : '450px'"
+            :height="mobile ? '197px' : '533px'"
+            :width="mobile ? '130px' : '450px'"
             class="rounded-lg cursor-pointer"
             @click="handleGoDetile(product.id)"
           />
