@@ -1,6 +1,6 @@
 <template>
-  <v-container fluid class="pa-4 mx-0 px-0">
-    <v-row class="mb-4">
+  <v-container fluid class="product-container">
+    <v-row class="mb-4 px-0 mt-10">
       <v-col cols="auto">
         <base-button
           variant="outlined"
@@ -53,17 +53,17 @@
       </div>
     </v-row>
 
-    <v-row class="ma-0 justify-center" dense>
+    <v-row class="justify-center mx-0 px-0" dense>
       <v-col
         v-for="product in products"
         :key="product.id"
         :cols="mobile ? 6 : 12"
-        class="pa-2 d-flex justify-center"
+        class="pa-1 px-1 d-flex justify-center"
         :style="mobile ? '' : 'max-width: max-content !important'"
       >
         <v-card
           elevation="2"
-          class="bg-grey text-center px-2 py-4 d-flex flex-column justify-space-between"
+          class="bg-grey text-center d-flex flex-column justify-space-between px-0 mx-0"
           :class="{
             'border-lg border-primary': selectedIds.includes(
               product.product_code
@@ -91,7 +91,7 @@
             />
             <div
               class="text-secondary2 cursor-pointer text-break"
-              style="font-size: 16px; color: #01c0c8"
+              style="font-size: 22px !important"
               @click="handleGoDetile(product.id)"
             >
               ID: {{ product.product_code }}
@@ -247,5 +247,20 @@ onMounted(fetchProducts);
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+</style>
+<style scoped>
+.product-container {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+</style>
+<style>
+.v-main {
+  padding: 0 !important;
+}
+.v-container:has(.product-container) {
+  padding-left: 0 !important;
+  padding-right: 0px !important;
 }
 </style>

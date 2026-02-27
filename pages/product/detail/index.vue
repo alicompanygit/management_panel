@@ -1,6 +1,10 @@
 <template>
   <v-container class="pa-4" :dir="locale === 'fa' ? 'rtl' : 'ltr'">
-    <v-card class="bg-grey px-7 py-7" max-width="1000" width="100%">
+    <v-card
+      :class="['bg-grey px-0', mobile ? 'pb-7' : 'py-7']"
+      max-width="1000"
+      width="100%"
+    >
       <v-row>
         <!-- Image Section -->
         <v-col
@@ -8,13 +12,17 @@
           md="6"
           order="1"
           :order-md="locale === 'fa' ? 1 : 2"
-          class="px-8"
+          :class="[mobile ? 'px-0' : 'px-8']"
         >
           <div class="ratio-3-4 mb-4">
             <v-img :src="getFullImageUrl(selectedImage)" eager />
           </div>
 
-          <v-row dense :justify="locale === 'fa' ? 'start' : 'end'">
+          <v-row
+            dense
+            :justify="locale === 'fa' ? 'start' : 'end'"
+            :class="[mobile ? 'px-5' : 'px-0']"
+          >
             <v-col
               v-for="(img, index) in product?.images"
               :key="index"
@@ -136,8 +144,11 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { useDisplay } from 'vuetify';
 import { useProduct } from '~/composables/Product';
 import { useBanner } from '~/composables/banner';
+
+const { mobile } = useDisplay();
 
 const { t, locale } = useI18n();
 
