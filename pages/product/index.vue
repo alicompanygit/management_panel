@@ -1,6 +1,6 @@
 <template>
   <v-container fluid class="product-container">
-    <v-row class="mb-4 px-0 mt-10">
+    <v-row class="mb-4 px-0 mt-10 px-3">
       <v-col cols="auto">
         <base-button
           variant="outlined"
@@ -101,7 +101,7 @@
       </v-col>
     </v-row>
 
-    <div class="w-100 d-flex justify-center align-center my-10">
+    <div class="w-100 d-flex justify-center align-center my-10 px-5">
       <div
         :class="[
           mobile ? 'w-100 px-2' : 'w-50',
@@ -256,7 +256,7 @@ onMounted(fetchProducts);
 }
 </style>
 <style>
-.v-main {
+.v-main:has(.product-container) {
   padding: 0 !important;
 }
 .v-container:has(.product-container) {
